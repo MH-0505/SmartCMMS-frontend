@@ -1,0 +1,38 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #d6d8df;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.Login-form{
+  background-color: white;
+  border-radius: 10px;
+  display: flex;
+  width: fit-content;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  margin: auto;
+}
+
+.Form-element{
+  margin: 5px;
+  padding: 3px;
+  font-size: calc(10px + 1vmin);
+  height: 4ch;
+}
