@@ -1,38 +1,65 @@
-.App {
-  text-align: center;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.Header-bar{
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  background-color: steelblue;
   color: white;
+  width: 100%;
+  height: fit-content;
+  align-self: flex-start;
+  padding: 10px;
 }
 
-.App-link {
-  color: #61dafb;
+.Header-button{
+  background-color: transparent;
+  border: none;
+  color: white;
+  height: auto;
+  margin-left: 5px;
+  padding: 5px;
+  font-size: calc(8px + 1vmin);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.Header-button:hover{
+  background-color: #2f6287;
+}
+
+.Header-button:active{
+  background-color: lightsteelblue;
+  color: #2f6287;
+}
+
+.Cancel-button{
+  background-color: indianred;
+  border: brown solid 2px;
+  border-radius: 5px;
+  color: white;
+  height: 4ch;
+  padding-right: 7px;
+  padding-left: 7px;
+  font-size: calc(6px + 1vmin);
+}
+
+.Cancel-button:hover{
+  background-color: brown;
+}
+
+.Overlay{
+  position: fixed;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.3);
+  z-index: 2;
+  cursor: pointer;
 }
