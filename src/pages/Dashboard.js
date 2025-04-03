@@ -81,10 +81,58 @@ function NewMaintenanceForm({ onClose }) {
 }
 
 function NewFailureReportForm({ onClose }) {
+    function submitFailureReport() {
+
+    }
+
     return (
         <>
             <FormTopBar heading="Nowe zgłoszenie awarii" onCancelButtonClick={onClose} />
-            <p>Formularz zgłoszenia awarii (TODO)</p>
+
+            <form action={submitFailureReport}>
+                <label style={{width:"100%"}}>
+                    Nazwa:<br/>
+                    <input name={"name"} style={{width:"100%"}}/>
+                </label>
+
+                <div className="Form-gridbox">
+                    <label htmlFor={"category"}>Kategoria:</label>
+                    <select name={"category"} id={"category"}>
+                        <option>Budowlana</option>
+                        <option>Elektryczna</option>
+                        <option>Gazowa</option>
+                        <option>Woda i kanalizacja</option>
+                        <option>Inne</option>
+                    </select>
+
+                    <label htmlFor={"technician"}>Wykonawca:</label>
+                    <select name={"technician"} id={"technician"}>
+                        <option>Jan Kowalski</option>
+                        <option>Adam Nowak</option>
+                        <option>Andrzej Górecki</option>
+                    </select>
+
+                    <label htmlFor={"description"}>Opis:</label>
+                    <textarea name={"description"} id={"description"} rows={5} style={{resize: "vertical"}}/>
+
+                    <label htmlFor={"startDate"}>Planowana data rozpoczęcia:</label>
+                    <input type={"date"} name={"startDate"} id={"startDate"} style={{minWidth:"fit-content", width:"120px"}}/>
+
+                    <label htmlFor={"endDate"}>Planowana data zakończenia:</label>
+                    <input type={"date"} name={"endDate"} id={"endDate"} style={{minWidth:"fit-content", width:"120px"}}/>
+
+                    <label htmlFor={"priority"}>Priorytet:</label>
+                    <select name={"priority"} id={"priority"} style={{minWidth:"fit-content", width:"120px"}}>
+                        <option>Bardzo wysoki</option>
+                        <option>Wysoki</option>
+                        <option>Normalny</option>
+                        <option>Niski</option>
+                        <option>Bardzo niski</option>
+                    </select>
+                </div>
+
+                <button type="submit" style={{marginTop:"auto", justifySelf:"right"}}>Zatwierdź zgłoszenie</button>
+            </form>
         </>
     );
 }

@@ -7,3 +7,21 @@
     border-radius: 15px;
     padding: 15px;
 }
+
+.Form-gridbox{
+    display: grid;
+    margin-top: 15px;
+    width: 100%;
+    row-gap: 13px;
+    grid-template-columns: 1fr 3fr;
+
+}
+
+form{
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-evenly;
+    flex-direction: column;
+    margin-top: 8px;
+    height: auto;
+}
