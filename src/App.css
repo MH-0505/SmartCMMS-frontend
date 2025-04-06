@@ -27,7 +27,7 @@
 }
 
 .Header-button:hover{
-  background-color: #2f6287;
+  background-color: var(--arslightblue);
 }
 
 .Header-button:active{
