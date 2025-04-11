@@ -50,6 +50,21 @@
   background-color: brown;
 }
 
+.Apply-button{
+  background-color: steelblue;
+  border: #2f6287 solid 2px;
+  border-radius: 5px;
+  color: white;
+  height: 4ch;
+  padding-right: 7px;
+  padding-left: 7px;
+  font-size: calc(6px + 1vmin);
+}
+
+.Apply-button:hover{
+  background-color: #2f6287;
+}
+
 .Overlay{
   position: fixed;
   display: flex;
