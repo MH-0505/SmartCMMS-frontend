@@ -4,9 +4,12 @@ import TaskPanel from "./dashboard_panels/TaskPanel";
 import MaintenancePanel from "./dashboard_panels/MaintenancePanel";
 import EnergyPanel from "./dashboard_panels/EnergyPanel";
 import BMSPanel from "./dashboard_panels/BMSPanel";
+import AdminPanel from "./dashboard_panels/AdminPanel";
+import UserPanel from "./dashboard_panels/UserPanel";
 
 import "./Dashboard.css";
 import "../App.css";
+
 
 
 
@@ -19,7 +22,9 @@ export default function Dashboard() {
         TaskPanel: <TaskPanel />,
         MaintenancePanel: <MaintenancePanel />,
         EnergyPanel: <EnergyPanel />,
-        BMSPanel: <BMSPanel />
+        BMSPanel: <BMSPanel />,
+        AdminPanel: <AdminPanel />,
+        UserPanel: <UserPanel />
     };
 
 
@@ -32,7 +37,7 @@ export default function Dashboard() {
         <div>
             <header className="Header-bar">
                 <div>
-                    <h1 className="App-title">SmartCMMS</h1>
+                    <h1 className="App-title">SiteFlow</h1>
                 </div>
                 <div style={{marginLeft: 'auto'}}>
                     <button className="Header-button" onClick={handleLogout}>Wyloguj</button>
@@ -55,6 +60,16 @@ export default function Dashboard() {
                 <button className={`Navigation-button ${activePanel === "BMSPanel" ? "active" : ""}`}
                         onClick={() => setActivePanel("BMSPanel")}>
                     SmartBMS
+                </button>
+                <button className={`Navigation-button ${activePanel === "UserPanel" ? "active" : ""}`}
+                        style={{marginLeft: 'auto'}}
+                        onClick={() => setActivePanel("UserPanel")}>
+                    Panel użytkownika
+                </button>
+                <button className={`Navigation-button ${activePanel === "AdminPanel" ? "active" : ""}`}
+                        style={{marginRight: '5vw'}}
+                        onClick={() => setActivePanel("AdminPanel")}>
+                    Panel administratora
                 </button>
             </div>
 

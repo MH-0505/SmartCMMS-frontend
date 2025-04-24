@@ -27,7 +27,7 @@
   align-items: center;
   justify-content: center;
   padding: 10px;
-  margin: auto;
+  margin-top: 10vh;
 }
 
 .Form-element{
@@ -35,4 +35,9 @@
   padding: 3px;
   font-size: calc(10px + 1vmin);
   height: 4ch;
+}
+
+.Ars-logo{
+  margin-top: 15vh;
+  max-width: 400px;
 }

@@ -1,3 +1,4 @@
+import logo from '../images/logo.svg';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"
 import "./Login.css";
@@ -37,24 +38,25 @@ export default function Login() {
     <div className="Login-page">
       <header className="App-header">
         <div className="Header-bar">
-          <h1 className="App-title">SmartCMMS</h1>
+          <h1 className="App-title">SiteFlow</h1>
         </div>
+        <img src={logo} className="Ars-logo" alt="ARS system logo"/>
         <form className="Login-form" onSubmit={handleSubmit}>
           <input
-            className="Form-element"
-            type="text"
-            placeholder="Nazwa użytkownika"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
+              className="Form-element"
+              type="text"
+              placeholder="Nazwa użytkownika"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
           />
           <input
-            className="Form-element"
-            type="password"
-            placeholder="Hasło"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
+              className="Form-element"
+              type="password"
+              placeholder="Hasło"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
           />
           <button className="Form-element" type="submit">Zaloguj</button>
         </form>

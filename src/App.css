@@ -36,8 +36,11 @@
 }
 
 .Navigation-bar{
+  display: flex;
+  flex-direction: row;
   background-color: var(--whitegrey);
   border-bottom: solid 2px var(--arsgreen);
+  box-shadow: 0 0 10px 0 #8F8F8F;
   padding-left: 13%;
 }
 
