@@ -51,7 +51,7 @@ export default function Dashboard() {
                 </button>
                 <button className={`Navigation-button ${activePanel === "TaskPanel" ? "active" : ""}`}
                         onClick={() => setActivePanel("TaskPanel")}>
-                    Zadania
+                    Awarie i zadania
                 </button>
                 <button className={`Navigation-button ${activePanel === "EnergyPanel" ? "active" : ""}`}
                         onClick={() => setActivePanel("EnergyPanel")}>
