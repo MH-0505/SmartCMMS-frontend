@@ -4,6 +4,20 @@
   box-sizing: border-box;
 }
 
+.Standard-btn{
+  background-color: var(--arslightblue);
+  border: none;
+  color: white;
+  padding: 6px;
+  margin-left: 8px;
+  margin-right: 8px;
+  font-size: calc(6px + 1vmin);
+}
+
+.Standard-btn:hover{
+  background-color: var(--darkgrey);
+}
+
 .Header-bar{
   display: flex;
   flex-direction: row;
