@@ -107,3 +107,38 @@
   z-index: 2;
   cursor: pointer;
 }
+
+.List-top-bar{
+  border-bottom: solid 1px gray;
+  padding: 5px;
+}
+
+.arrow {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+  margin: 0 8px;
+}
+
+.arrow.right {
+  transform: rotate(-45deg);
+}
+
+.arrow.left {
+  transform: rotate(135deg);
+}
+
+.arrow.up {
+  transform: rotate(-135deg);
+}
+
+.arrow.down {
+  transform: rotate(45deg);
+}
+
+.Filters{
+  display: grid;
+  gap: 3px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
