@@ -3,6 +3,7 @@ import "../Dashboard.css";
 import "../../App.css";
 import "./TaskPanel.css";
 import NewTaskForm from "../../components/NewTaskForm";
+import NewTaskProtocolForm from "../../components/NewTaskProtocolForm";
 import ListTopBar from "../../components/ListTopBar";
 
 export default function TaskPanel(){
@@ -55,7 +56,7 @@ export default function TaskPanel(){
 
                             return (
                                 <div key={task.id} className="Task-item">
-                                    {ListItem(task, technician, client, location)}
+                                    {ListItem(task, technician, client, location, handleFormOpen)}
                                 </div>
                             );
                         })}
@@ -68,6 +69,8 @@ export default function TaskPanel(){
                     <div className="Form-container">
                         {activeForm === "FailureReport" ? (
                             <NewTaskForm onClose={handleFormClose}/>
+                        ) : activeForm === "TaskProtocol" ? (
+                            <NewTaskProtocolForm onClose={handleFormClose}/>
                         ) : null}
                     </div>
                 </div>
@@ -126,7 +129,7 @@ export function Filters() {
     );
 }
 
-export function ListItem(task, technician, client, location){
+export function ListItem(task, technician, client, location, protocolOnClick){
     const [isExtended, setIsExtended] = useState(false);
 
     function taskOnClick(){
@@ -176,7 +179,9 @@ export function ListItem(task, technician, client, location){
                     </div>
                     <div className={"Task-details-footer"}>
                         <button className={"Standard-btn"}>Edytuj zgłoszenie</button>
-                        <button className={"Standard-btn"}>Dodaj protokół</button>
+                        <button className={"Standard-btn"} onClick={() => protocolOnClick("TaskProtocol")}>
+                            Dodaj protokół
+                        </button>
                     </div>
                 </>
                 :

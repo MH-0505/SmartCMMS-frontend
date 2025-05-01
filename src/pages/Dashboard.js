@@ -10,10 +10,6 @@ import UserPanel from "./dashboard_panels/UserPanel";
 import "./Dashboard.css";
 import "../App.css";
 
-
-
-
-
 export default function Dashboard() {
     const navigate = useNavigate();
     const [activePanel, setActivePanel] = useState(null);

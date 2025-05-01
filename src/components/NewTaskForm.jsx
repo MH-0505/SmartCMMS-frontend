@@ -1,13 +1,10 @@
-import {useState} from "react";
 import FormTopBar from "../components/FormTopBar";
 import "../pages/Dashboard.css";
 import "../App.css";
 
 export default function NewTaskForm({ onClose }) {
-    const [startTime, setStartTime] = useState("--:--");
-    const [endTime, setEndTime] = useState("--:--");
 
-    function submitFailureReport() {
+    function submitTask() {
         // TODO
     }
 
@@ -15,7 +12,7 @@ export default function NewTaskForm({ onClose }) {
         <>
             <FormTopBar heading="Nowe zgłoszenie" onCancelButtonClick={onClose} />
 
-            <form action={submitFailureReport}>
+            <form action={submitTask}>
                 <label style={{width:"100%"}}>
                     Nazwa:<br/>
                     <input name={"name"} style={{width:"100%"}}/>
@@ -62,9 +59,7 @@ export default function NewTaskForm({ onClose }) {
                                style={{minWidth: "fit-content", width: "120px", height: "100%"}}/>
                         <label style={{marginLeft: "10px"}}>
                             Godzina:
-                            <input type={"time"} name={"startTime"} value={startTime}
-                                   onChange={e => setStartTime(e.target.value)}
-                                   style={{marginLeft: "10px"}}/>
+                            <input type={"time"} name={"failureTime"} style={{marginLeft: "10px"}}/>
                         </label>
                     </div>
 
@@ -104,9 +99,7 @@ export default function NewTaskForm({ onClose }) {
                                style={{minWidth: "fit-content", width: "120px", height: "100%"}}/>
                         <label style={{marginLeft: "10px"}}>
                             Godzina:
-                            <input type={"time"} name={"startTime"} value={startTime}
-                                   onChange={e => setStartTime(e.target.value)}
-                                   style={{marginLeft: "10px"}}/>
+                            <input type={"time"} name={"startTime"} style={{marginLeft: "10px"}}/>
                         </label>
                     </div>
 
@@ -116,9 +109,7 @@ export default function NewTaskForm({ onClose }) {
                                style={{minWidth: "fit-content", width: "120px", height: "100%"}}/>
                         <label style={{marginLeft: "10px"}}>
                             Godzina:
-                            <input type={"time"} name={"endTime"} value={endTime}
-                                   onChange={e => setEndTime(e.target.value)}
-                                   style={{marginLeft: "10px"}}/>
+                            <input type={"time"} name={"endTime"} style={{marginLeft: "10px"}}/>
                         </label>
                     </div>
                 </div>

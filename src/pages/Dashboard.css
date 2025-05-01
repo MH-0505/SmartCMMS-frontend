@@ -11,6 +11,7 @@
 .Form-gridbox{
     display: grid;
     margin-top: 30px;
+    margin-bottom: 10px;
     width: 100%;
     row-gap: 13px;
     grid-template-columns: 1fr 3fr;
