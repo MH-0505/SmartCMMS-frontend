@@ -1,0 +1,18 @@
+@import '../variables.css';
+
+.staff-list {
+    width: 80%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.staff-list th,
+.staff-list td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.staff-list thead {
+    background-color: var(--whitegrey);
+}

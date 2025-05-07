@@ -4,6 +4,7 @@ import TaskPanel from "./dashboard_panels/TaskPanel";
 import MaintenancePanel from "./dashboard_panels/MaintenancePanel";
 import EnergyPanel from "./dashboard_panels/EnergyPanel";
 import BMSPanel from "./dashboard_panels/BMSPanel";
+import StaffPanel from "./dashboard_panels/StaffPanel";
 
 import "./Dashboard.css";
 import "../App.css";
@@ -19,7 +20,8 @@ export default function Dashboard() {
         TaskPanel: <TaskPanel />,
         MaintenancePanel: <MaintenancePanel />,
         EnergyPanel: <EnergyPanel />,
-        BMSPanel: <BMSPanel />
+        BMSPanel: <BMSPanel />,
+        StaffPanel: <StaffPanel />
     };
 
 
@@ -55,6 +57,10 @@ export default function Dashboard() {
                 <button className={`Navigation-button ${activePanel === "BMSPanel" ? "active" : ""}`}
                         onClick={() => setActivePanel("BMSPanel")}>
                     SmartBMS
+                </button>
+                <button className={`Navigation-button ${activePanel === "StaffPanel" ? "active" : ""}`}
+                        onClick={() => setActivePanel("StaffPanel")}>
+                    Pracownicy
                 </button>
             </div>
 
