@@ -1,22 +1,31 @@
 import logo from '../images/logo.svg';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"
+import { useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 import "./Login.css";
 import "../App.css"
+
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { setUser } = useContext(UserContext);
 
   const handleSubmit = async (e) => {
-    navigate("/Dashboard");     // TODO - Usunąć i odkomentować resztę gdy będzie backend
-
-    /*
     e.preventDefault();
     setError("");
 
+        // TRYB MOCK
+    if (process.env.REACT_APP_MOCK_MODE === "true") {
+      mockUser(username, setUser)
+      navigate("/dashboard");
+      return;
+    }
+
+        // PRODUKCJA
     const response = await fetch("http://localhost:8000/api/login/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -27,11 +36,20 @@ export default function Login() {
       setError("Błędne dane logowania");
     } else {
       const data = await response.json();
-      console.log("Zalogowano! Token:", data.token);
+      localStorage.setItem("token", data.access);
+
+      const meResponse = await fetch("http://localhost:8000/api/me/", {
+        headers: {
+          Authorization: `Bearer ${data.access}`,
+        },
+      });
+
+      if (meResponse.ok) {
+        const userData = await meResponse.json();
+        setUser(userData);
+      }
       navigate("/Dashboard");
     }
-
-     */
   };
 
   return (
@@ -67,4 +85,41 @@ export default function Login() {
   );
 }
 
+function mockUser(username, setUser){
+  const fakeUser1 = {
+    id: 1,
+    username: "andrzej.dev",
+    first_name: "Andrzej",
+    last_name: "Tester",
+    role: "TECHNIK",
+    email_address: "andrzej.tester@example.com",
+  };
+  const fakeUser2 = {
+    id: 2,
+    username: "bogdan.dev",
+    first_name: "Bogdan",
+    last_name: "Tester",
+    role: "MANAGER",
+    email_address: "bogdan.tester@example.com",
+  };
+  const fakeUser3 = {
+    id: 3,
+    username: "janek.dev",
+    first_name: "Jan",
+    last_name: "Tester",
+    role: "ADMIN",
+    email_address: "jan.tester@example.com",
+  };
+  localStorage.setItem("token", "mocked_token_123");
+
+  if(username.toLowerCase() === "technik"){
+    setUser(fakeUser1);
+  }else if(username.toLowerCase() === "manager"){
+    setUser(fakeUser2);
+  }else if(username.toLowerCase() === "admin"){
+    setUser(fakeUser3);
+  }else{
+    setUser(fakeUser1)
+  }
+}
 

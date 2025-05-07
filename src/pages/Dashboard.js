@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import { useState } from "react";
+import { useContext } from "react";
 import TaskPanel from "./dashboard_panels/TaskPanel";
 import MaintenancePanel from "./dashboard_panels/MaintenancePanel";
 import EnergyPanel from "./dashboard_panels/EnergyPanel";
@@ -7,10 +8,14 @@ import BMSPanel from "./dashboard_panels/BMSPanel";
 import AdminPanel from "./dashboard_panels/AdminPanel";
 import UserPanel from "./dashboard_panels/UserPanel";
 
+import { UserContext } from "../contexts/UserContext";
+
+import default_pfp from "../images/blank-profile-picture.png"
 import "./Dashboard.css";
 import "../App.css";
 
 export default function Dashboard() {
+    const { user } = useContext(UserContext);
     const navigate = useNavigate();
     const [activePanel, setActivePanel] = useState(null);
 
@@ -25,7 +30,7 @@ export default function Dashboard() {
 
 
     function handleLogout() {
-        //localStorage.removeItem("token");
+        localStorage.removeItem("token");
         navigate("/");
     }
 
@@ -35,9 +40,21 @@ export default function Dashboard() {
                 <div>
                     <h1 className="App-title">SiteFlow</h1>
                 </div>
-                <div style={{marginLeft: 'auto'}}>
-                    <button className="Header-button" onClick={handleLogout}>Wyloguj</button>
+
+                <div className="User-info-bar">
+                    <img className="profile-picture"
+                         src={user?.profile_picture || default_pfp}
+                         alt="Zdjęcie profilowe"
+                    />
+                    <div>
+                        <h3>{user?.first_name} {user?.last_name}</h3>
+                        <p>{user?.role}</p>
+                    </div>
+                    <div>
+                        <button className="Header-button" onClick={handleLogout}>Wyloguj</button>
+                    </div>
                 </div>
+
             </header>
 
             <div className="Navigation-bar">
@@ -69,15 +86,18 @@ export default function Dashboard() {
                 </button>
             </div>
 
-            {activePanel && (
-                <div style={{padding: '15px'}}>
-                    {panelComponents[activePanel]}
-                </div>
-            )}
-
-            <div className="Dashboard-container">
-                {/* TODO */}
-            </div>
+            {activePanel ? (    // Wyświetla wybrany panel
+                    <div style={{padding: '15px'}}>
+                        {panelComponents[activePanel]}
+                    </div>
+                )
+                :               // lub stronę startową jeśli zaraz po zalogowaniu
+                (
+                    <div className="Dashboard-container">
+                        <h2>Witaj, {user?.first_name}.</h2>
+                    </div>
+                )
+            }
         </div>
     );
 }

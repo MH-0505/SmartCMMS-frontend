@@ -27,7 +27,7 @@
   width: 100%;
   height: fit-content;
   align-self: flex-start;
-  padding: 10px;
+  padding: 6px;
 }
 
 .Header-button{
@@ -47,6 +47,27 @@
 .Header-button:active{
   background-color: lightsteelblue;
   color: #2f6287;
+}
+
+.User-info-bar{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  max-height: 100%;
+  border: 1px solid white;
+  background-color: var(--arsmidblue);
+  border-radius: 5px;
+  padding: 3px;
+  margin-left: auto;
+}
+
+.User-info-bar img{
+  max-height: 45px;
+  border-radius: inherit;
+}
+
+.User-info-bar div{
+  margin-left: 10px;
 }
 
 .Navigation-bar{
