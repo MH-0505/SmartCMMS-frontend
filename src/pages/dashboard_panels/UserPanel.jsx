@@ -1,5 +1,11 @@
-export default function EnergyPanel() {
+import React from "react";
+import UserPanelComponent from "../../components/UserPanelComponent"; // ← import z folderu components
+
+export default function UserPanelPage() {
     return (
-        <h2>Panel użytkownika</h2>
-    )
+        <div>
+            <h2>Panel użytkownika</h2>
+            <UserPanelComponent />
+        </div>
+    );
 }
