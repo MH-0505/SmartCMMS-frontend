@@ -1,0 +1,65 @@
+@import '../variables.css';
+.user-panel-container {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding: 40px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.user-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 30px;
+  text-align: center;
+  width: 300px;
+}
+
+.user-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 10%;
+  object-fit: cover;
+  margin-bottom: 15px;
+}
+
+.user-name {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 10px 0;
+}
+
+.user-email {
+  color: #777;
+  font-size: 14px;
+}
+
+.user-info-form {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 30px;
+  width: 400px;
+}
+
+.user-info-form h2 {
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.user-info-form label {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.user-info-form input {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
