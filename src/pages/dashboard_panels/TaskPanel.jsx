@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import "../Dashboard.css";
 import "../../App.css";
 import "./TaskPanel.css";
@@ -8,19 +8,7 @@ import ListTopBar from "../../components/ListTopBar";
 
 export default function TaskPanel(){
     const [activeForm, setActiveForm] = useState(null);
-    const [taskList, setTaskList] = useState(tasks);
-
-    function getTechnicianById(id) {
-        return technicians.find(t => t.id === id);
-    }
-
-    function getClientById(id) {
-        return clients.find(c => c.id === id);
-    }
-
-    function getLocationById(id) {
-        return locations.find(l => l.id === id);
-    }
+    const [tasks, setTasks] = useState([]);
 
     function handleFormOpen(formType) {
         setActiveForm(formType);
@@ -29,6 +17,30 @@ export default function TaskPanel(){
     function handleFormClose(){
         setActiveForm(null);
     }
+
+    useEffect(() => {
+        const fetchTasks = async () => {
+            try {
+                const response = await fetch("http://localhost:8000/api/tasks/", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("token")
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setTasks(data);
+                } else {
+                    console.error("Błąd pobierania zadań");
+                }
+            } catch (error) {
+                console.error("Błąd sieci:", error);
+            }
+        };
+
+        fetchTasks();
+    }, []);
 
     return (
         <div className="Task-panel">
@@ -49,14 +61,15 @@ export default function TaskPanel(){
                             <p><strong>Priorytet</strong></p>
                             <p><strong>Termin oddania</strong></p>
                         </div>
-                        {taskList.map(task => {
-                            const technician = getTechnicianById(task.technicianId);
-                            const client = getClientById(task.clientId);
-                            const location = getLocationById(task.locationId);
-
+                        {tasks?.map(task => {
+                            //console.log(task)
                             return (
                                 <div key={task.id} className="Task-item">
-                                    {ListItem(task, technician, client, location, handleFormOpen)}
+                                    <ListItem
+                                        key={task.id}
+                                        task_data={task}
+                                        protocolOnClick={handleFormOpen}
+                                    />
                                 </div>
                             );
                         })}
@@ -129,7 +142,7 @@ export function Filters() {
     );
 }
 
-export function ListItem(task, technician, client, location, protocolOnClick){
+export function ListItem({task_data, protocolOnClick}){
     const [isExtended, setIsExtended] = useState(false);
 
     function taskOnClick(){
@@ -137,44 +150,45 @@ export function ListItem(task, technician, client, location, protocolOnClick){
 
     }
     return(
+
         <div className={`Task-wrapper ${isExtended ? "active" : ""}`}>
             <div className="Task" onClick={taskOnClick}>
                 <div>
-                    <h3>{task.name}</h3>
-                    <p> {location?.name} – {location?.address} - {location?.roomsOrFloors[task?.locationRoomId]}</p>
+                    <h3>{task_data.name}</h3>
+                    <p> {task_data.location?.name} – {task_data.location?.address}</p>
                 </div>
-                <p>{task.category}</p>
-                {task.priority === 'Wysoki' ?
-                    <p style={{color:'red'}}><strong>{task.priority}</strong></p>
+                <p>{task_data.category}</p>
+                {task_data.priority === 'wysoki' ?
+                    <p style={{color:'red'}}><strong>{task_data.priority}</strong></p>
                     :
-                    <p>{task.priority}</p>
+                    <p>{task_data.priority}</p>
                 }
-                <p>{task.endDate}, {task.endTime}</p>
+                <p>{task_data.deadline_date}, {task_data.deadline_time}</p>
             </div>
             {isExtended ?
                 <>
                     <div className={"Task-details"}>
                         <div>
                             <p><strong>Data awarii:</strong></p>
-                            <p>{task.failureDate}, {task.failureTime}</p>
+                            <p>{task_data.failure_date}, {task_data.failure_time}</p>
                         </div>
                         <div>
                             <p><strong>Data przyjęcia zadania:</strong></p>
-                            <p>{task.startDate}, {task.startTime}</p>
+                            <p>{task_data.raport_date}, {task_data.raport_time}</p>
                         </div>
                         <div>
                             <p><strong>Klient:</strong></p>
-                            <p>{client?.firstName} {client?.lastName}, {client?.positionOrDepartment}</p>
-                            <p>Tel. +{client?.phoneNumber}</p>
-                            <p>E-mail: {client?.emailAddress}</p>
+                            <p>{task_data.client?.first_name} {task_data.client?.last_name}, {task_data.client?.position}</p>
+                            <p>Tel. +{task_data.client?.phone_number}</p>
+                            <p>E-mail: {task_data.client?.email_address}</p>
                         </div>
                         <div>
                             <p><strong>Technicy:</strong></p>
-                            <p>{technician?.firstName} {technician.lastName}</p>
+                            <p>{task_data.technician?.first_name} {task_data.technician.last_name}</p>
                         </div>
                         <div style={{gridColumn: "span 2"}}>
                             <p><strong>Opis sytuacji:</strong></p>
-                            <p>{task.description}</p>
+                            <p>{task_data.description}</p>
                         </div>
                     </div>
                     <div className={"Task-details-footer"}>
@@ -186,7 +200,6 @@ export function ListItem(task, technician, client, location, protocolOnClick){
                 </>
                 :
                 <></>
-
             }
         </div>
     );
