@@ -1,9 +1,9 @@
 @import '../variables.css';
 
 .Client-list-header,
-.Employee {
+.Client {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 3fr 1fr 1fr;
     align-items: center;
     gap: 1rem;
     padding: 5px 1rem;
@@ -19,8 +19,7 @@
 
 
 .Client {
-    background-color: var(--whitegrey);
-    border-bottom: var(--table-border) solid var(--darkgrey);
+    background-color: white;
 }
 
 .Client:hover {

@@ -4,12 +4,11 @@ import "../App.css";
 import "./StaffList.css";
 import ListTopBar from "./ListTopBar";
 
-import {useEmployeeContext} from "../contexts/EmployeeContext"; //zakomentować po zapopulowaniu bazy
+//import {useEmployeeContext} from "../contexts/EmployeeContext"; //zakomentować po zapopulowaniu bazy
 
 // Lista pracowników
 export default function StaffList() {
-    //odkomentować po zapopulowaniu bazy
-    /*
+
     const [employees, setEmployees] = useState([]);
 
 
@@ -40,10 +39,10 @@ export default function StaffList() {
 
         fetchEmployees();
     }, []);
-*/
 
 
-const { employees } = useEmployeeContext();
+
+    //const { employees } = useEmployeeContext();
 
     //tabela
     return (
@@ -57,6 +56,7 @@ const { employees } = useEmployeeContext();
                     <div className="Staff-list-items">
                         <div className="Staff-list-header">
                             <p><strong>Imię i nazwisko</strong></p>
+                            <p><strong>Rola</strong></p>
                             <p><strong>Nowe</strong></p>
                             <p><strong>W trakcie</strong></p>
                             <p><strong>Wykonane</strong></p>
@@ -87,11 +87,12 @@ function StaffListItem({ employee }) {
 
             <div className="Employee" onClick={handleClick}>
 
-                <p>{employee.firstName} {employee.lastName}</p>
-                <p>{employee.tickets.new}</p>
-                <p>{employee.tickets.inProgress}</p>
-                <p>{employee.tickets.completed}</p>
-                <p>{employee.tickets.total}</p>
+                <p>{employee.first_name} {employee.last_name} </p>
+                <p>{employee.role.toLowerCase()}</p>
+                <p>{employee.tasks_new}</p>
+                <p>{employee.tasks_in_progress}</p>
+                <p>{employee.tasks_done}</p>
+                <p>{employee.tasks_done + employee.tasks_in_progress + employee.tasks_new}</p>
             </div>
 
             {isExpanded && (

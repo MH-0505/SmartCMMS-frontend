@@ -2,16 +2,16 @@ import {EmployeeProvider} from "../../contexts/EmployeeContext";
 import StaffList from "../../components/StaffList";
 import ClientList from "../../components/ClientList";
 import FacilitiesList from "../../components/FacilitiesList";
+import {ClientsProvider} from "../../contexts/ClientContext";
 
 export default function AdminPanel() {
     return (
         <div>
             <h2>Panel administratora</h2>
 
-            {/* usunąć </EmployeeProvider> po zapopulowaniu bazy*/}
-            <EmployeeProvider>
+
              {/*lista klientów*/}
-            <ClientList/>
+             <ClientList/>
 
              {/*lista pracowników*/}
              <StaffList/>
@@ -19,7 +19,6 @@ export default function AdminPanel() {
              {/*lista obiektów*/}
              <FacilitiesList/>
 
-            </EmployeeProvider>
 
         </div>
 

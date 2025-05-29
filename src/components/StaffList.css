@@ -3,7 +3,7 @@
 .Staff-list-header,
 .Employee {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
     align-items: center;
     gap: 1rem;
     padding: 5px 1rem;
@@ -17,10 +17,8 @@
     border-bottom: 2px solid var(--darkgrey);
 }
 
-
 .Employee {
-    background-color: var(--whitegrey);
-    border-bottom: var(--table-border) solid var(--darkgrey);
+    background-color: white;
 }
 
 .Employee:hover {

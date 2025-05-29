@@ -15,7 +15,7 @@ export default function FacilitiesList() {
         const fetchFacilities = async () => {
             try {
                 // sprawdzić, czy pobiera właściwe dane
-                const response = await fetch("http://localhost:8000/api/facilities/", {
+                const response = await fetch("http://localhost:8000/api/locations/", {
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": "Bearer " + localStorage.getItem("token"),
@@ -36,6 +36,7 @@ export default function FacilitiesList() {
         fetchFacilities();
     }, []);
 
+
     return (
         <div className="Facilities-panel">
             <div className="Facilities-panel-container">
@@ -48,8 +49,6 @@ export default function FacilitiesList() {
                         <div className="Facilities-list-header">
                             <p><strong>Nazwa</strong></p>
                             <p><strong>Adres</strong></p>
-                            <p><strong>Piętra</strong></p>
-                            <p><strong>Pomieszczenia</strong></p>
                         </div>
                         {facilities?.map((facility) => (
                             <FacilityListItem key={facility.id} facility={facility} />
@@ -76,14 +75,19 @@ function FacilityListItem({ facility }) {
             <div className="Facility" onClick={handleClick}>
                 <p>{facility.name}</p>
                 <p>{facility.address}</p>
-                <p>{facility.floors}</p>
-                <p>{facility.rooms}</p>
             </div>
 
             {isExpanded && (
                 <div className="Facility-details">
-                    <div style={{ gridColumn: "span 2" }}>
+                    <div style={{gridColumn: "span 2"}}>
                         <p><strong>ID obiektu:</strong> {facility.id}</p>
+                        {facility.floors && (
+                            <p><strong>Piętra:</strong> {facility.floors.join(', ')}</p>
+                        )}
+
+                        {facility.rooms && (
+                            <p><strong>Pomieszczenia:</strong> {facility.rooms.join(', ')}</p>
+                        )}
                     </div>
                 </div>
             )}

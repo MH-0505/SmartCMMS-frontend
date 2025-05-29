@@ -3,7 +3,7 @@
 .Facilities-list-header,
 .Facility {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr;
     align-items: center;
     gap: 1rem;
     padding: 5px 1rem;
@@ -19,8 +19,7 @@
 
 
 .Facility {
-    background-color: var(--whitegrey);
-    border-bottom: var(--table-border) solid var(--darkgrey);
+    background-color: white;
 }
 
 .Facility:hover {
@@ -61,7 +60,7 @@
 }
 
 
-.Facilities-details {
+.Facility-details {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 10px;
@@ -69,7 +68,7 @@
     border-top: 1px solid var(--darkgrey);
 }
 
-.Facilities-details-footer {
+.Facility-details-footer {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -78,13 +77,13 @@
 }
 
 
-.Facilities-wrapper {
+.Facility-wrapper {
     background-color: white;
     margin-bottom: 3px;
     margin-top: 3px;
     border: transparent;
 }
 
-.Facilities-wrapper.active {
+.Facility-wrapper.active {
     border-left: 3px solid var(--darkgrey);
 }

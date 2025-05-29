@@ -47,8 +47,6 @@ export default function ClientList() {
                     <div className="Client-list-items">
                         <div className="Client-list-header">
                             <p><strong>Imię i nazwisko</strong></p>
-                            <p><strong>Telefon</strong></p>
-                            <p><strong>Email</strong></p>
                             <p><strong>Stanowisko</strong></p>
                             <p><strong>Dział</strong></p>
                         </div>
@@ -75,9 +73,7 @@ function ClientListItem({ client }) {
             {/*ZWERYFIKOWAĆ DANE*/}
             {/*+ustalić czy prawidłowy format bez rozwinięcia/z rozwinięciem*/}
             <div className="Client" onClick={handleClick}>
-                <p>{client.firstName} {client.lastName}</p>
-                <p>{client.phone}</p>
-                <p>{client.email}</p>
+                <p>{client.first_name} {client.last_name}</p>
                 <p>{client.job_position}</p>
                 <p>{client.department}</p>
             </div>
@@ -86,8 +82,8 @@ function ClientListItem({ client }) {
                 <div className="Client-details">
                     <div style={{ gridColumn: "span 2" }}>
                         <p><strong>ID klienta:</strong> {client.id}</p>
-                        <p><strong>Email:</strong> {client.email}</p>
-                        <p><strong>Telefon:</strong> {client.phone}</p>
+                        <p><strong>Email:</strong> {client.email_address}</p>
+                        <p><strong>Telefon:</strong> +{client.phone_number}</p>
                         <p><strong>Stanowisko:</strong> {client.job_position}</p>
                         <p><strong>Dział:</strong> {client.department}</p>
                     </div>
