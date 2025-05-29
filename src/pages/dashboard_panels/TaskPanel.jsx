@@ -19,6 +19,14 @@ export default function TaskPanel(){
     }
 
     useEffect(() => {
+
+            // TRYB MOCK
+        if (process.env.REACT_APP_MOCK_MODE === "true") {
+            mockTasks(setTasks)
+            return;
+        }
+
+            // PRODUKCJA
         const fetchTasks = async () => {
             try {
                 const response = await fetch("http://localhost:8000/api/tasks/", {
@@ -205,66 +213,105 @@ export function ListItem({task_data, protocolOnClick}){
     );
 }
 
-// mock data
-const tasks = [
-    {
-        id: 0,
-        name: 'Awaria 1',
-        clientId: 0,
-        locationId: 3,
-        locationRoomId: 2,
-        technicianId: 1,
-        failureDate: '25-04-2025',
-        failureTime: '12:33',
-        priority: 'Wysoki',
-        category: 'Instalacja HVAC',
-        description: 'przykładowy opis',
-        startDate: '25-04-2025',
-        startTime: '14:00',
-        endDate: '26-04-2025',
-        endTime: '14:00',
-    },
+function mockTasks(setTasks){
+    const tasks = [
+        {
+            id: 0,
+            name: 'Awaria 1',
+            clientId: 0,
+            locationId: 3,
+            locationRoomId: 2,
+            technicianId: 1,
+            failureDate: '25-04-2025',
+            failureTime: '12:33',
+            priority: 'Wysoki',
+            category: 'Instalacja HVAC',
+            description: 'przykładowy opis',
+            startDate: '25-04-2025',
+            startTime: '14:00',
+            endDate: '26-04-2025',
+            endTime: '14:00',
+        },
 
-    {
-        id: 1,
-        name: 'Awaria 2',
-        clientId: 1,
-        locationId: 1,
-        locationRoomId: 1,
-        technicianId: 0,
-        failureDate: '23-04-2025',
-        failureTime: '10:44',
-        priority: 'Niski',
-        category: 'Usterka budowlana',
-        description: 'przykładowy opis 2',
-        startDate: '24-04-2025',
-        startTime: '14:00',
-        endDate: '29-04-2025',
-        endTime: '14:00'
-    },
-];
+        {
+            id: 1,
+            name: 'Awaria 2',
+            clientId: 1,
+            locationId: 1,
+            locationRoomId: 1,
+            technicianId: 0,
+            failureDate: '23-04-2025',
+            failureTime: '10:44',
+            priority: 'Niski',
+            category: 'Usterka budowlana',
+            description: 'przykładowy opis 2',
+            startDate: '24-04-2025',
+            startTime: '14:00',
+            endDate: '29-04-2025',
+            endTime: '14:00'
+        },
+    ];
 
-const technicians = [
-    {id: 0, firstName: 'Jan', lastName: 'Kowalski'},
-    {id: 1, firstName: 'Andrzej', lastName: 'Górecki'},
-    {id: 2, firstName: 'Adam', lastName: 'Nowak'},
-]
+    const technicians = [
+        {id: 0, firstName: 'Jan', lastName: 'Kowalski'},
+        {id: 1, firstName: 'Andrzej', lastName: 'Górecki'},
+        {id: 2, firstName: 'Adam', lastName: 'Nowak'},
+    ]
 
-const clients = [
-    {
-        id: 0,
-        firstName: 'Marek',
-        lastName: 'Mazur',
-        positionOrDepartment: 'Mechanik',
-        phoneNumber: '48 880 701 510',
-        emailAddress: 'marekmazur@example.com'},
-    {id:1, firstName: 'Tomasz', lastName: 'Konieczny', positionOrDepartment: 'Manager', phoneNumber: '48 811 201 340', emailAddress: 'tomaszkonieczny@example.com'}
-]
+    const clients = [
+        {
+            id: 0,
+            firstName: 'Marek',
+            lastName: 'Mazur',
+            positionOrDepartment: 'Mechanik',
+            phoneNumber: '48 880 701 510',
+            emailAddress: 'marekmazur@example.com'},
+        {id:1, firstName: 'Tomasz', lastName: 'Konieczny', positionOrDepartment: 'Manager', phoneNumber: '48 811 201 340', emailAddress: 'tomaszkonieczny@example.com'}
+    ]
 
-const locations = [
-    {id:0, name:'Biuro 1', address:'Ul. Fabryczna 14', roomsOrFloors: ['poziom -1', 'poziom 0', 'poziom 1', 'poziom 2', 'poziom 3']},
-    {id:1, name:'Fabryka 1', address:'Ul. Kwiatowa 54', roomsOrFloors: ['poziom -1', 'poziom 0', 'poziom 1', 'poziom 2']},
-    {id:2, name:'Biuro 2', address:'Ul. Słoneczna 66', roomsOrFloors: ['poziom -1', 'poziom 0', 'poziom 1', 'poziom 2', 'poziom 3']},
-    {id:3, name:'Szkoła', address:'Ul. Prosta 23', roomsOrFloors: ['poziom -1', 'poziom 0', 'poziom 1', 'poziom 2']}
-]
+    const locations = [
+        {id:0, name:'Biuro 1', address:'Ul. Fabryczna 14', roomsOrFloors: ['poziom -1', 'poziom 0', 'poziom 1', 'poziom 2', 'poziom 3']},
+        {id:1, name:'Fabryka 1', address:'Ul. Kwiatowa 54', roomsOrFloors: ['poziom -1', 'poziom 0', 'poziom 1', 'poziom 2']},
+        {id:2, name:'Biuro 2', address:'Ul. Słoneczna 66', roomsOrFloors: ['poziom -1', 'poziom 0', 'poziom 1', 'poziom 2', 'poziom 3']},
+        {id:3, name:'Szkoła', address:'Ul. Prosta 23', roomsOrFloors: ['poziom -1', 'poziom 0', 'poziom 1', 'poziom 2']}
+    ]
+
+    const enrichedTasks = tasks.map(task => {
+        const client = clients.find(c => c.id === task.clientId);
+        const technician = technicians.find(t => t.id === task.technicianId);
+        const location = locations.find(l => l.id === task.locationId);
+
+        return {
+            id: task.id,
+            name: task.name,
+            priority: task.priority.toLowerCase(),
+            category: task.category,
+            description: task.description,
+            deadline_date: task.endDate,
+            deadline_time: task.endTime,
+            failure_date: task.failureDate,
+            failure_time: task.failureTime,
+            raport_date: task.startDate,
+            raport_time: task.startTime,
+            client: {
+                first_name: client?.firstName,
+                last_name: client?.lastName,
+                position: client?.positionOrDepartment,
+                phone_number: client?.phoneNumber,
+                email_address: client?.emailAddress,
+            },
+            technician: {
+                first_name: technician?.firstName,
+                last_name: technician?.lastName
+            },
+            location: {
+                name: location?.name,
+                address: location?.address
+            }
+        };
+    });
+
+    setTasks(enrichedTasks);
+}
+
 

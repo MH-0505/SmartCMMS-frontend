@@ -13,7 +13,7 @@ export default function UserPanel() {
             <div className="user-card">
                 <img src={profilePicture} alt="Avatar" className="user-avatar" />
                 <div className="user-name">{user.first_name}</div>
-                <div className="user-email">{user.email_address}</div>
+                <div className="user-email">{user.email}</div>
             </div>
 
             <div className="user-info-form">
@@ -32,7 +32,7 @@ export default function UserPanel() {
                     <input type="text" defaultValue={user.role} readOnly/>
 
                     <label>Email</label>
-                    <input type="email" defaultValue={user.email_address} readOnly/>
+                    <input type="email" defaultValue={user.email} readOnly/>
                 </form>
             </div>
         </div>

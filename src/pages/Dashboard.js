@@ -7,7 +7,6 @@ import EnergyPanel from "./dashboard_panels/EnergyPanel";
 import BMSPanel from "./dashboard_panels/BMSPanel";
 import AdminPanel from "./dashboard_panels/AdminPanel";
 import UserPanel from "./dashboard_panels/UserPanel";
-import StaffPanel from "./dashboard_panels/StaffPanel";
 
 import { UserContext } from "../contexts/UserContext";
 
@@ -26,7 +25,6 @@ export default function Dashboard() {
         MaintenancePanel: <MaintenancePanel />,
         EnergyPanel: <EnergyPanel />,
         BMSPanel: <BMSPanel />,
-        StaffPanel: <StaffPanel />,
         AdminPanel: <AdminPanel />,
         UserPanel: <UserPanel />
     };
@@ -76,20 +74,21 @@ export default function Dashboard() {
                         onClick={() => setActivePanel("BMSPanel")}>
                     SmartBMS
                 </button>
-                <button className={`Navigation-button ${activePanel === "StaffPanel" ? "active" : ""}`}
-                        onClick={() => setActivePanel("StaffPanel")}>
-                    Pracownicy
-                </button>
-                <button className={`Navigation-button ${activePanel === "UserPanel" ? "active" : ""}`}
-                        style={{marginLeft: 'auto'}}
+                <div style={{marginLeft: 'auto', marginRight: '5vw'}}>
+                    <button className={`Navigation-button ${activePanel === "UserPanel" ? "active" : ""}`}
                         onClick={() => setActivePanel("UserPanel")}>
-                    Panel użytkownika
-                </button>
-                <button className={`Navigation-button ${activePanel === "AdminPanel" ? "active" : ""}`}
-                        style={{marginRight: '5vw'}}
-                        onClick={() => setActivePanel("AdminPanel")}>
-                    Panel administratora
-                </button>
+                        Panel użytkownika
+                    </button>
+                    {user?.role !== "TECHNIK" ? (
+                        <button className={`Navigation-button ${activePanel === "AdminPanel" ? "active" : ""}`}
+                                onClick={() => setActivePanel("AdminPanel")}>
+                            Panel administratora
+                        </button>
+                    ): null
+                    }
+                </div>
+
+
             </div>
 
             {activePanel ? (    // Wyświetla wybrany panel

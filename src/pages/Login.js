@@ -92,7 +92,7 @@ function mockUser(username, setUser){
     first_name: "Andrzej",
     last_name: "Tester",
     role: "TECHNIK",
-    email_address: "andrzej.tester@example.com",
+    email: "andrzej.tester@example.com",
   };
   const fakeUser2 = {
     id: 2,
@@ -100,7 +100,7 @@ function mockUser(username, setUser){
     first_name: "Bogdan",
     last_name: "Tester",
     role: "MANAGER",
-    email_address: "bogdan.tester@example.com",
+    email: "bogdan.tester@example.com",
   };
   const fakeUser3 = {
     id: 3,
@@ -108,7 +108,7 @@ function mockUser(username, setUser){
     first_name: "Jan",
     last_name: "Tester",
     role: "ADMIN",
-    email_address: "jan.tester@example.com",
+    email: "jan.tester@example.com",
   };
   localStorage.setItem("token", "mocked_token_123");
 
