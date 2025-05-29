@@ -10,6 +10,8 @@ export default function ClientList() {
 
     //pobieranie danych
     useEffect(() => {
+        // TRYB MOCK
+        /*TODO*/
         const fetchClients = async () => {
             try {
                 // sprawdzić, czy pobiera właściwe dane

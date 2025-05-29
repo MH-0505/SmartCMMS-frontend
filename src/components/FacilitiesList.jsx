@@ -10,6 +10,8 @@ export default function FacilitiesList() {
 
     //pobieranie danych
     useEffect(() => {
+        // TRYB MOCK
+            /*TODO*/
         const fetchFacilities = async () => {
             try {
                 // sprawdzić, czy pobiera właściwe dane

@@ -15,6 +15,8 @@ export default function StaffList() {
 
     //pobieranie danych
     useEffect(() => {
+        // TRYB MOCK
+            //TODO
         const fetchEmployees = async () => {
             try {
                 // sprawdzić, czy pobiera właściwe dane
