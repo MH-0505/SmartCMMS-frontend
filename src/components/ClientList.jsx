@@ -8,6 +8,7 @@ import ListTopBar from "./ListTopBar";
 export default function ClientList() {
     const [clients, setClients] = useState([]);
 
+    //pobieranie danych
     useEffect(() => {
         const fetchClients = async () => {
             try {
@@ -69,6 +70,7 @@ function ClientListItem({ client }) {
 
     return (
         <div className={`Client-wrapper ${isExpanded ? "active" : ""}`}>
+            {/*ZWERYFIKOWAĆ DANE*/}
             <div className="Client" onClick={handleClick}>
                 <p>{client.firstName} {client.lastName}</p>
                 <p>{client.phone}</p>

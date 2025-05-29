@@ -8,6 +8,7 @@ import ListTopBar from "./ListTopBar";
 export default function FacilitiesList() {
     const [facilities, setFacilities] = useState([]);
 
+    //pobieranie danych
     useEffect(() => {
         const fetchFacilities = async () => {
             try {
@@ -68,6 +69,7 @@ function FacilityListItem({ facility }) {
 
     return (
         <div className={`Facility-wrapper ${isExpanded ? "active" : ""}`}>
+            {/*ZWERYFIKOWAĆ DANE*/}
             <div className="Facility" onClick={handleClick}>
                 <p>{facility.name}</p>
                 <p>{facility.address}</p>

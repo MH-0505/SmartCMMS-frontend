@@ -8,6 +8,7 @@ import ListTopBar from "./ListTopBar";
 export default function StaffList() {
     const [employees, setEmployees] = useState([]);
 
+    //pobieranie danych
     useEffect(() => {
         const fetchEmployees = async () => {
             try {
@@ -33,6 +34,7 @@ export default function StaffList() {
         fetchEmployees();
     }, []);
 
+    //tabela
     return (
         <div className="Staff-panel">
             <div className="Staff-panel-container">
@@ -69,7 +71,9 @@ function StaffListItem({ employee }) {
 
     return (
         <div className={`Staff-wrapper ${isExpanded ? "active" : ""}`}>
+            {/*ZWERYFIKOWAĆ DANE*/}
             <div className="Employee" onClick={handleClick}>
+
                 <p>{employee.firstName} {employee.lastName}</p>
                 <p>{employee.tickets.new}</p>
                 <p>{employee.tickets.inProgress}</p>
