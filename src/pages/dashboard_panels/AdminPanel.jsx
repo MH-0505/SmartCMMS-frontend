@@ -8,11 +8,18 @@ export default function AdminPanel() {
         <div>
             <h2>Panel administratora</h2>
 
-
-
+            {/* usunąć </EmployeeProvider> po zapopulowaniu bazy*/}
+            <EmployeeProvider>
+             {/*lista klientów*/}
             <ClientList/>
-            <StaffList/>
-            <FacilitiesList/>
+
+             {/*lista pracowników*/}
+             <StaffList/>
+
+             {/*lista obiektów*/}
+             <FacilitiesList/>
+
+            </EmployeeProvider>
 
         </div>
 

@@ -70,6 +70,7 @@ function FacilityListItem({ facility }) {
     return (
         <div className={`Facility-wrapper ${isExpanded ? "active" : ""}`}>
             {/*ZWERYFIKOWAĆ DANE*/}
+            {/*+ustalić czy prawidłowy format bez rozwinięcia/z rozwinięciem*/}
             <div className="Facility" onClick={handleClick}>
                 <p>{facility.name}</p>
                 <p>{facility.address}</p>

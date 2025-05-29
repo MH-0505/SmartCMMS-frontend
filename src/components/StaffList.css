@@ -1,23 +1,30 @@
 @import '../variables.css';
-.Staff-list-header, .Task {
+
+.Staff-list-header,
+.Employee {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
     align-items: center;
     gap: 1rem;
-    padding: 0.5rem 1rem;
-    border-bottom: 1px solid #ccc;
+    padding: 5px 1rem;
 }
 
+
 .Staff-list-header {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-    align-items: center;
-    padding: 5px;
     margin-bottom: 8px;
     height: 5ch;
     background-color: white;
     border-bottom: 2px solid var(--darkgrey);
+}
 
+
+.Employee {
+    background-color: var(--whitegrey);
+    border-bottom: var(--table-border) solid var(--darkgrey);
+}
+
+.Employee:hover {
+    background-color: var(--whitegrey);
 }
 
 .Employee p {
@@ -26,56 +33,43 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-.Staff-panel{
+
+
+.Staff-panel {
     width: 80vw;
     padding-top: 2vw;
     margin-left: 10vw;
 }
 
-.Staff-panel-container{
+.Staff-panel-container {
     display: grid;
 }
 
-.Staff-list{
+
+.Staff-list {
     margin-top: 20px;
     max-width: 1000px;
     border-radius: 5px;
     box-shadow: 0 0 6px #8F8F8F;
 }
 
-.Staff-list-items{
+
+.Staff-list-items {
     display: flex;
     flex-direction: column;
     background-color: var(--whitegrey);
 }
 
 
-
-.Staff-list-header-element{
-    border-right: 1px solid var(--darkgrey);
-    border-left: 1px solid var(--darkgrey);
-}
-
-.Employee{
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    background-color: white;
-    align-items: center;
-    padding: 5px;
-}
-
-.Employee:hover{
-    background-color: var(--whitegrey);
-}
-
-.Staff-details{
+.Staff-details {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 10px;
     padding: 5px 5px 5px 15px;
     border-top: 1px solid var(--darkgrey);
 }
-.Staff-details-footer{
+
+.Staff-details-footer {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -83,14 +77,14 @@
     padding: 5px;
 }
 
-.Staff-wrapper{
+
+.Staff-wrapper {
     background-color: white;
     margin-bottom: 3px;
     margin-top: 3px;
     border: transparent;
 }
-.Staff-wrapper.active{
+
+.Staff-wrapper.active {
     border-left: 3px solid var(--darkgrey);
 }
-
-

@@ -71,6 +71,7 @@ function ClientListItem({ client }) {
     return (
         <div className={`Client-wrapper ${isExpanded ? "active" : ""}`}>
             {/*ZWERYFIKOWAĆ DANE*/}
+            {/*+ustalić czy prawidłowy format bez rozwinięcia/z rozwinięciem*/}
             <div className="Client" onClick={handleClick}>
                 <p>{client.firstName} {client.lastName}</p>
                 <p>{client.phone}</p>

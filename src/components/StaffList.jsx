@@ -4,9 +4,14 @@ import "../App.css";
 import "./StaffList.css";
 import ListTopBar from "./ListTopBar";
 
+import {useEmployeeContext} from "../contexts/EmployeeContext"; //zakomentować po zapopulowaniu bazy
+
 // Lista pracowników
 export default function StaffList() {
+    //odkomentować po zapopulowaniu bazy
+    /*
     const [employees, setEmployees] = useState([]);
+
 
     //pobieranie danych
     useEffect(() => {
@@ -33,6 +38,10 @@ export default function StaffList() {
 
         fetchEmployees();
     }, []);
+*/
+
+
+const { employees } = useEmployeeContext();
 
     //tabela
     return (
@@ -72,6 +81,8 @@ function StaffListItem({ employee }) {
     return (
         <div className={`Staff-wrapper ${isExpanded ? "active" : ""}`}>
             {/*ZWERYFIKOWAĆ DANE*/}
+            {/*+ustalić czy prawidłowy format bez rozwinięcia/z rozwinięciem*/}
+
             <div className="Employee" onClick={handleClick}>
 
                 <p>{employee.firstName} {employee.lastName}</p>
