@@ -2,8 +2,9 @@ import React from "react";
 import { useEmployeeContext } from "../contexts/EmployeeContext";
 import "./StaffList.css";
 
+//tabela pracowników
 const StaffList = () => {
-    const { employees } = useEmployeeContext();
+    const { employees } = useEmployeeContext(); //tymczasowo kontekst zawierający informacje o pracownikach
 
     return (
         <div>
