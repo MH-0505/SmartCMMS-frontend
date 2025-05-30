@@ -1,8 +1,104 @@
 import FormTopBar from "../components/FormTopBar";
 import "../pages/Dashboard.css";
 import "../App.css";
+import {useContext, useEffect, useState} from "react";
+import {UserContext} from "../contexts/UserContext";
 
 export default function NewTaskForm({ onClose }) {
+    const [ employeeNames, setEmployeeNames] = useState([]);
+    const { user } = useContext(UserContext);
+    const [clients, setClients] = useState([]);
+    const [selectedClientId, setSelectedClientId] = useState(null);
+    const [selectedClient, setSelectedClient] = useState({
+        position: "",
+        phone_number: "",
+        email_address: ""
+    });
+    const [locations, setLocations] = useState([]);
+    const [selectedLocationId, setSelectedLocationId] = useState(null);
+    const [selectedLocation, setSelectedLocation] = useState({
+        address: "",
+        floors: "",
+        rooms: ""
+    });
+
+    useEffect(() => {
+        // TRYB MOCK
+            /*TODO*/
+        const fetchEmployeeNames = async () => {
+            try {
+                const response = await fetch("http://localhost:8000/api/employees/names/?role=TECHNIK", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("token"),
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setEmployeeNames(data);
+                } else {
+                    console.error("Błąd pobierania pracowników");
+                }
+            } catch (error) {
+                console.error("Błąd sieci:", error);
+            }
+        };
+
+        fetchEmployeeNames();
+    }, []);
+
+    useEffect(() => {
+        // TRYB MOCK
+        /*TODO*/
+        const fetchClients = async () => {
+            try {
+                const response = await fetch("http://localhost:8000/api/clients/", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("token"),
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setClients(data);
+                } else {
+                    console.error("Błąd pobierania klientów");
+                }
+            } catch (error) {
+                console.error("Błąd sieci:", error);
+            }
+        };
+
+        fetchClients();
+    }, []);
+
+    useEffect(() => {
+        // TRYB MOCK
+        /*TODO*/
+        const fetchLocations = async () => {
+            try {
+                const response = await fetch("http://localhost:8000/api/locations/", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("token"),
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setLocations(data);
+                } else {
+                    console.error("Błąd pobierania lokalizacji");
+                }
+            } catch (error) {
+                console.error("Błąd sieci:", error);
+            }
+        };
+
+        fetchLocations();
+    }, []);
 
     function submitTask() {
         // TODO
@@ -22,35 +118,110 @@ export default function NewTaskForm({ onClose }) {
                     <div className="Form-gridbox">
                         <h3 style={{gridColumn: "span 2"}}>Dane zgłaszającego</h3>
 
-                        <label htmlFor={"clientName"}>Imię i nazwisko:</label>
-                        <select name={"clientName"} id={"clientName"}>
-                            <option>Tomasz Konieczny</option>
-                            <option>Marek Mazur</option>
-                        </select>
+                        <label htmlFor={"submitterName"}>Imię i nazwisko:</label>
+                        <input name={"submitterName"} id={"submitterName"} style={{width: "100%"}}
+                               defaultValue={user.first_name + " " + user.last_name}/>
 
-                        <label htmlFor={"clientPositionOrDepartment"}>Stanowisko / Dział:</label>
-                        <input name={"clientPositionOrDepartment"} id={"clientPositionOrDepartment"}
-                               style={{width: "100%"}}/>
+                        <label htmlFor={"submitterPhoneNumber"}>Telefon kontaktowy:</label>
+                        <input name={"submitterPhoneNumber"} id={"submitterPhoneNumber"} style={{width: "100%"}}
+                               defaultValue={user.phone_number}/>
 
-                        <label htmlFor={"clientPhoneNumber"}>Telefon kontaktowy:</label>
-                        <input name={"clientPhoneNumber"} id={"clientPhoneNumber"} style={{width: "100%"}}/>
-
-                        <label htmlFor={"clientEmail"}>Adres e-mail:</label>
-                        <input name={"clientEmail"} id={"clientEmail"} style={{width: "100%"}}/>
+                        <label htmlFor={"submitterEmail"}>Adres e-mail:</label>
+                        <input name={"submitterEmail"} id={"submitterEmail"} style={{width: "100%"}}
+                               defaultValue={user.email}/>
                     </div>
 
                     <div className="Form-gridbox">
-                        <h3 style={{gridColumn: "span 2"}}>Opis zdarzenia</h3>
+                        <h3 style={{gridColumn: "span 2"}}>Dane klienta</h3>
+
+                        <label htmlFor={"clientName"}>Imię i nazwisko:</label>
+                        <select
+                            name={"clientName"}
+                            id={"clientName"}
+                            onChange={(e) => {
+                                const clientId = parseInt(e.target.value);
+                                setSelectedClientId(clientId);
+                                const found = clients.find(c => c.id === clientId);
+                                if (found) {
+                                    setSelectedClient({
+                                        job_position: found.job_position || "",
+                                        phone_number: found.phone_number || "",
+                                        email_address: found.email_address || ""
+                                    });
+                                }
+                            }}
+                        >
+                            <option value="">-- wybierz klienta --</option>
+                            {clients.map(client => (
+                                <option key={client.id} value={client.id}>
+                                    {client.first_name + " " + client.last_name}
+                                </option>
+                            ))}
+                        </select>
+
+                        <label htmlFor={"clientPositionOrDepartment"}>Stanowisko / Dział:</label>
+                        <input
+                            name="clientPositionOrDepartment"
+                            id="clientPositionOrDepartment"
+                            value={selectedClient.job_position}
+                            onChange={(e) =>
+                                setSelectedClient({...selectedClient, job_position: e.target.value})
+                            }
+                        />
+                        <label htmlFor={"clientPhoneNumber"}>Telefon kontaktowy:</label>
+                        <input
+                            name="clientPhoneNumber"
+                            id="clientPhoneNumber"
+                            value={selectedClient.phone_number}
+                            onChange={(e) =>
+                                setSelectedClient({...selectedClient, phone_number: e.target.value})
+                            }
+                        />
+                        <label htmlFor={"clientEmail"}>Adres e-mail:</label>
+                        <input
+                            name="clientEmail"
+                            id="clientEmail"
+                            value={selectedClient.email_address}
+                            onChange={(e) =>
+                                setSelectedClient({...selectedClient, email_address: e.target.value})
+                            }
+                        />
+
+                    </div>
+
+                    <div className="Form-gridbox">
+                    <h3 style={{gridColumn: "span 2"}}>Opis zdarzenia</h3>
                         <label htmlFor={"location"}>Obiekt / Lokalizacja:</label>
-                        <select name={"location"} id={"location"}>
-                            <option>Fabryka 1</option>
-                            <option>Szkoła</option>
-                            <option>Biuro 1</option>
-                            <option>Biuro 2</option>
+                        <select
+                            name={"location"}
+                            id={"location"}
+                            onChange={(e) => {
+                                const locationsId = parseInt(e.target.value);
+                                setSelectedLocationId(locationsId);
+                                const found = locations.find(c => c.id === locationsId);
+                                if (found) {
+                                    setSelectedLocation({
+                                        address: found.address || "",
+                                        floors: found.floors || "",
+                                        rooms: found.rooms || ""
+                                    });
+                                }
+                            }}
+                        >
+                            <option value="">-- wybierz obiekt --</option>
+                            {locations.map(locations => (
+                                <option key={locations.id} value={locations.id}>
+                                    {locations.name + " - " + locations.address}
+                                </option>
+                            ))}
                         </select>
 
                         <label htmlFor={"address"}>Adres:</label>
-                        <input name={"address"} id={"address"} style={{width: "100%"}}/>
+                        <input name={"address"} id={"address"} style={{width: "100%"}}
+                            value={selectedLocation.address}
+                            onChange={(e) =>
+                                setSelectedClient({...selectedClient, email_address: e.target.value})
+                            }/>
 
                         <label htmlFor={"roomOrFloor"}>Piętro / Pomieszczenie:</label>
                         <input name={"roomOrFloor"} id={"roomOrFloor"} style={{width: "100%"}}/>
@@ -83,9 +254,9 @@ export default function NewTaskForm({ onClose }) {
                         <h3 style={{gridColumn: "span 2"}}>Serwis</h3>
                         <label htmlFor={"technician"}>Wykonawcy:</label>
                         <select name={"technician"} id={"technician"}>
-                            <option>Jan Kowalski</option>
-                            <option>Adam Nowak</option>
-                            <option>Andrzej Górecki</option>
+                            {employeeNames.map(employee => (
+                                <option key={employee.id} value={employee.id}>{employee.first_name+ ' ' +employee.last_name}</option>
+                            ))}
                         </select>
 
                         <label htmlFor={"priority"}>Priorytet:</label>
