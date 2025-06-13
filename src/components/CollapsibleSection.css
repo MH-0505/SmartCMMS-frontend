@@ -1,0 +1,31 @@
+@import '../variables.css';
+.collapsible-section {
+    border: 1px solid #ccc;
+    margin: 1rem 0;
+    border-radius: 6px;
+    overflow: hidden;
+    width: 100%;
+}
+
+.collapsible-header {
+    background-color: #f0f0f0;
+    padding: 1rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+}
+
+/*animacja*/
+.collapsible-content-wrapper {
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    width: 100%;
+}
+
+.collapsible-content {
+    box-sizing: border-box;
+    background-color: #fff;
+    width: 100%;
+}

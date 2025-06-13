@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "../pages/Dashboard.css";
 import "../App.css";
 import "./ClientList.css";
-import ListTopBar from "./ListTopBar";
+import SearchTopBar from "./SearchTopBar";
 
 // Lista klientów
 export default function ClientList() {
@@ -40,9 +40,9 @@ export default function ClientList() {
         <div className="Client-panel">
             <div className="Client-panel-container">
                 <div className="Client-list">
-                    <ListTopBar headingText="Lista klientów">
+                    <SearchTopBar headingText="Lista klientów">
                         {/* TODO: Filtry */}
-                    </ListTopBar>
+                    </SearchTopBar>
 
                     <div className="Client-list-items">
                         <div className="Client-list-header">
