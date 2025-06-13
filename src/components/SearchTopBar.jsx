@@ -14,6 +14,7 @@ export default function SearchTopBar({ onSearch, children }) {
 
     return (
         <div className="Search-top-bar">
+            {/*//TODO wyszukiwanie*/}
             <div className="search-header">
                 <input
                     type="text"

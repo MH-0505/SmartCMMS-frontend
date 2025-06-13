@@ -38,6 +38,7 @@
     width: 80vw;
     padding-top: 2vw;
     margin-left: 10vw;
+
 }
 
 .Client-panel-container {
@@ -50,6 +51,7 @@
     max-width: var(--list-width);
     border-radius: var(--list-border);
     box-shadow: 0 0 6px #8F8F8F;
+
 }
 
 
