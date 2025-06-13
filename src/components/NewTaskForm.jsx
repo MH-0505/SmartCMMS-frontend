@@ -18,9 +18,11 @@ export default function NewTaskForm({ onClose }) {
     const [selectedLocationId, setSelectedLocationId] = useState(null);
     const [selectedLocation, setSelectedLocation] = useState({
         address: "",
-        floors: "",
-        rooms: ""
+        floors: [],
+        rooms: []
     });
+    const [categories, setCategories] = useState([]);
+    const [taskTypes, setTaskTypes] = useState([]);
 
     useEffect(() => {
         // TRYB MOCK
@@ -100,15 +102,86 @@ export default function NewTaskForm({ onClose }) {
         fetchLocations();
     }, []);
 
-    function submitTask() {
-        // TODO
+    useEffect(() => {
+        const fetchChoices = async () => {
+            try{
+                const response = await fetch("http://localhost:8000/api/tasks/choices/", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("token"),
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setCategories(data.categories);
+                    setTaskTypes(data.types);
+                } else {
+                    console.error("Błąd pobierania kategorii zadań");
+                }
+            } catch (error) {
+                console.error("Błąd sieci:", error);
+            }
+        }
+        fetchChoices();
+    }, []);
+
+
+    function submitTask(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+
+        const taskData = {
+            name: formData.get("name"),
+            description: formData.get("description"),
+            failure_date: formData.get("failureDate"),
+            failure_time: formData.get("failureTime"),
+            deadline_date: formData.get("endDate"),
+            deadline_time: formData.get("endTime"),
+            category: formData.get("category"),
+            type: "BASIC",
+            priority: formData.get("priority"),
+            client_id: formData.get("clientName"),
+            location_id: formData.get("location"),
+            technician_id: formData.get("technician") || null,
+            submitter_id: user.id,
+            location_floor: formData.get("floor"),
+            location_room: formData.get("room"),
+            location_additional_info: formData.get("additionalLocInfo")
+        };
+        console.log(taskData);
+        fetch("http://localhost:8000/api/tasks/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("token")
+            },
+            body: JSON.stringify(taskData)
+        })
+            .then(res => {
+                if (res.ok) {
+                    alert("Zgłoszenie zostało zapisane");
+                    onClose();
+                } else {
+                    return res.json().then(data => {
+                        console.error("Błąd zapisu:", data);
+                        alert("Nie udało się zapisać zgłoszenia.");
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("Błąd sieci:", error);
+                alert("Błąd połączenia z serwerem.");
+            });
     }
+
 
     return (
         <>
             <FormTopBar heading="Nowe zgłoszenie" onCancelButtonClick={onClose} />
 
-            <form action={submitTask}>
+            <form onSubmit={submitTask}>
                 <label style={{width:"100%"}}>
                     Nazwa:<br/>
                     <input name={"name"} style={{width:"100%"}}/>
@@ -190,7 +263,7 @@ export default function NewTaskForm({ onClose }) {
                     </div>
 
                     <div className="Form-gridbox">
-                    <h3 style={{gridColumn: "span 2"}}>Opis zdarzenia</h3>
+                        <h3 style={{gridColumn: "span 2"}}>Opis zdarzenia</h3>
                         <label htmlFor={"location"}>Obiekt / Lokalizacja:</label>
                         <select
                             name={"location"}
@@ -218,13 +291,30 @@ export default function NewTaskForm({ onClose }) {
 
                         <label htmlFor={"address"}>Adres:</label>
                         <input name={"address"} id={"address"} style={{width: "100%"}}
-                            value={selectedLocation.address}
-                            onChange={(e) =>
-                                setSelectedClient({...selectedClient, email_address: e.target.value})
-                            }/>
+                               value={selectedLocation.address}
+                               onChange={(e) =>
+                                   setSelectedLocation({...selectedLocation, address: e.target.value})
+                               }/>
 
-                        <label htmlFor={"roomOrFloor"}>Piętro / Pomieszczenie:</label>
-                        <input name={"roomOrFloor"} id={"roomOrFloor"} style={{width: "100%"}}/>
+                        <label htmlFor={"floor"}>Piętro:</label>
+                        <select name={"floor"} id={"floor"}>
+                            <option value="">-- wybierz piętro --</option>
+                            {selectedLocation.floors && selectedLocation.floors.map((floor) => (
+                                <option key={floor} value={floor}>{floor}</option>
+                            ))}
+                        </select>
+
+                        <label htmlFor={"room"}>Pomieszczenie:</label>
+                        <select name={"room"} id={"room"}>
+                            <option value="">-- wybierz pomieszczenie --</option>
+
+                            {selectedLocation.rooms && selectedLocation.rooms.map((room) => (
+                                <option key={room} value={room}>{room}</option>
+                            ))}
+                        </select>
+
+                        <label htmlFor={"additionalLocInfo"} style={{paddingRight: '10px'}}>Dodatkowe informacje o lokalizacji:</label>
+                        <input name={"additionalLocInfo"} id={"additionalLocInfo"} style={{width: "100%"}}></input>
 
                         <label htmlFor={"failureDate"}>Data awarii:</label>
                         <div>
@@ -238,12 +328,9 @@ export default function NewTaskForm({ onClose }) {
 
                         <label htmlFor={"category"}>Rodzaj awarii:</label>
                         <select name={"category"} id={"category"}>
-                            <option>Instalacja elektryczna</option>
-                            <option>Instalacja wodno-kanalizacyjna</option>
-                            <option>Instalacja HVAC</option>
-                            <option>System alarmowy / ppoż.</option>
-                            <option>Usterka budowlana</option>
-                            <option>Inne</option>
+                            {categories.map(category => (
+                                <option key={category.label} value={category.value}>{category.value}</option>
+                            ))}
                         </select>
 
                         <label htmlFor={"description"}>Opis sytuacji:</label>
@@ -261,9 +348,9 @@ export default function NewTaskForm({ onClose }) {
 
                         <label htmlFor={"priority"}>Priorytet:</label>
                         <select name={"priority"} id={"priority"} style={{minWidth: "fit-content", width: "120px"}}>
-                            <option>Wysoki</option>
-                            <option>Średni</option>
-                            <option>Niski</option>
+                            <option key="WYSOKI" value="wysoki">Wysoki</option>
+                            <option key="SREDNI" value="średni">Średni</option>
+                            <option key="NISKI" value="niski">Niski</option>
                         </select>
 
                         <label htmlFor={"startDate"}>Data przyjęcia zgłoszenia:</label>

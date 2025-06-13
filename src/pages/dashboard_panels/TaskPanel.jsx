@@ -52,13 +52,13 @@ export default function TaskPanel(){
 
     return (
         <div className="Task-panel">
-            <button className={"New-task-button"} onClick={() => handleFormOpen("FailureReport")}>
-                Dodaj nowe zgłoszenie
-            </button>
-
             <div className="Task-panel-container">
                 <div className="Task-list">
-                    <ListTopBar headingText="Lista zadań">
+                    <ListTopBar
+                        headingText="Lista zadań"
+                        buttonText={"Nowe zadanie"}
+                        onButtonClick={() => handleFormOpen("FailureReport")}
+                    >
                         <Filters/>
                     </ListTopBar>
 

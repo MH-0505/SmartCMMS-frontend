@@ -3,10 +3,19 @@ import "../pages/Dashboard.css";
 import "../App.css";
 import "./FacilitiesList.css";
 import ListTopBar from "./ListTopBar";
+import NewLocationForm from "./NewLocationForm";
+
 
 //lista obiektów
 export default function FacilitiesList() {
     const [facilities, setFacilities] = useState([]);
+    const [activeForm, setActiveForm] = useState(null);
+    const [selectedLocation, setSelectedLocation] = useState(null);
+
+    function handleNewLocation(){
+        setSelectedLocation(null)
+        setActiveForm(true)
+    }
 
     //pobieranie danych
     useEffect(() => {
@@ -37,11 +46,78 @@ export default function FacilitiesList() {
     }, []);
 
 
+    function FacilityListItem({ facility }) {
+        const [isExpanded, setIsExpanded] = useState(false);
+
+        const handleClick = () => {
+            setIsExpanded(!isExpanded);
+        };
+
+        function handleEditButton() {
+            setSelectedLocation(facility)
+            setActiveForm(true)
+        }
+
+        function handleDeleteButton() {
+
+        }
+
+        return (
+            <div className={`Facility-wrapper ${isExpanded ? "active" : ""}`}>
+                <div className="Facility" onClick={handleClick}>
+                    <p>{facility.name}</p>
+                    <p>{facility.address}</p>
+                </div>
+
+                {isExpanded && (
+                    <div className="Facility-details">
+                        <p><strong>ID obiektu:</strong></p> <p> {facility.id}</p>
+                        {facility.floors && (
+                            <div style={{
+                                display: 'grid',
+                                gridColumn: '2 span',
+                                gridColumnGap: '10px',
+                                gridTemplateColumns: '1fr 3fr'
+                            }}>
+                                <p><strong>Piętra:</strong></p> <p> {facility.floors.join(', ')}</p>
+                            </div>
+                        )}
+
+                        {facility.rooms && (
+                            <div style={{
+                                display: 'grid',
+                                gridColumn: '2 span',
+                                gridColumnGap: '10px',
+                                gridTemplateColumns: '1fr 3fr'
+                            }}>
+                                <p><strong>Pomieszczenia:</strong></p>  <p> {facility.rooms.join(', ')}</p>
+                            </div>
+                        )}
+
+                        <div className="List-item-bottom-bar" style={{gridColumn: "span 2"}}>
+                            <button className="Standard-btn Red-btn" onClick={handleDeleteButton}
+                                    style={{marginLeft: "auto"}}>
+                                Usuń obiekt
+                            </button>
+                            <button className="Standard-btn" onClick={handleEditButton}>
+                                Edytuj dane
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+    }
+
     return (
         <div className="Facilities-panel">
             <div className="Facilities-panel-container">
                 <div className="Facilities-list">
-                    <ListTopBar headingText="Lista obiektów">
+                    <ListTopBar
+                        headingText="Lista obiektów"
+                        buttonText={"Nowy obiekt"}
+                        onButtonClick={handleNewLocation}
+                    >
                         {/* TODO: Filtry */}
                     </ListTopBar>
 
@@ -56,41 +132,15 @@ export default function FacilitiesList() {
                     </div>
                 </div>
             </div>
-        </div>
-    );
-}
-
-// pojedynczy obiekt
-function FacilityListItem({ facility }) {
-    const [isExpanded, setIsExpanded] = useState(false);
-
-    const handleClick = () => {
-        setIsExpanded(!isExpanded);
-    };
-
-    return (
-        <div className={`Facility-wrapper ${isExpanded ? "active" : ""}`}>
-            {/*ZWERYFIKOWAĆ DANE*/}
-            {/*+ustalić czy prawidłowy format bez rozwinięcia/z rozwinięciem*/}
-            <div className="Facility" onClick={handleClick}>
-                <p>{facility.name}</p>
-                <p>{facility.address}</p>
-            </div>
-
-            {isExpanded && (
-                <div className="Facility-details">
-                    <div style={{gridColumn: "span 2"}}>
-                        <p><strong>ID obiektu:</strong> {facility.id}</p>
-                        {facility.floors && (
-                            <p><strong>Piętra:</strong> {facility.floors.join(', ')}</p>
-                        )}
-
-                        {facility.rooms && (
-                            <p><strong>Pomieszczenia:</strong> {facility.rooms.join(', ')}</p>
-                        )}
+            {activeForm && (
+                <div className="Overlay">
+                    <div className="Form-container">
+                        <NewLocationForm onClose={() => setActiveForm(false)} selectedLocation={selectedLocation}/>
                     </div>
                 </div>
             )}
         </div>
     );
 }
+
+
