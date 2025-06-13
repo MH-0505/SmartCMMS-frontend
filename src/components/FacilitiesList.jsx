@@ -3,10 +3,13 @@ import "../pages/Dashboard.css";
 import "../App.css";
 import "./FacilitiesList.css";
 import ListTopBar from "./ListTopBar";
+import SearchTopBar from "./SearchTopBar";
 
 //lista obiektów
 export default function FacilitiesList() {
     const [facilities, setFacilities] = useState([]);
+    const [filteredFacilities, setFilteredFacilities] = useState([]);
+    const [searchQuery, setSearchQuery] = useState(""); 
 
     //pobieranie danych
     useEffect(() => {
@@ -25,6 +28,7 @@ export default function FacilitiesList() {
                 if (response.ok) {
                     const data = await response.json();
                     setFacilities(data);
+                    setFilteredFacilities(data);
                 } else {
                     console.error("Błąd pobierania obiektów");
                 }
@@ -36,21 +40,34 @@ export default function FacilitiesList() {
         fetchFacilities();
     }, []);
 
+    useEffect(() => {
+        const lowerQuery = searchQuery.toLowerCase();
+        setFilteredFacilities(
+            facilities.filter((facility) => {
+                const matchesText =
+                    `${facility.name}`.toLowerCase().includes(lowerQuery) ||
+                    (facility.address && facility.address.toLowerCase().includes(lowerQuery));
+                return matchesText;
+            })
+        );
+    }, [facilities, searchQuery]);
+
+    const handleSearch = (query) => setSearchQuery(query);
 
     return (
         <div className="Facilities-panel">
             <div className="Facilities-panel-container">
                 <div className="Facilities-list">
-                    <ListTopBar headingText="Lista obiektów">
+                    <SearchTopBar headingText="Lista obiektów" onSearch={handleSearch}>
                         {/* TODO: Filtry */}
-                    </ListTopBar>
+                    </SearchTopBar>
 
                     <div className="Facilities-list-items">
                         <div className="Facilities-list-header">
                             <p><strong>Nazwa</strong></p>
                             <p><strong>Adres</strong></p>
                         </div>
-                        {facilities?.map((facility) => (
+                        {filteredFacilities?.map((facility) => (
                             <FacilityListItem key={facility.id} facility={facility} />
                         ))}
                     </div>

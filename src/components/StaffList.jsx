@@ -3,6 +3,7 @@ import "../pages/Dashboard.css";
 import "../App.css";
 import "./StaffList.css";
 import ListTopBar from "./ListTopBar";
+import SearchTopBar from "./SearchTopBar";
 
 //import {useEmployeeContext} from "../contexts/EmployeeContext"; //zakomentować po zapopulowaniu bazy
 
@@ -10,6 +11,9 @@ import ListTopBar from "./ListTopBar";
 export default function StaffList() {
 
     const [employees, setEmployees] = useState([]);
+    const [filteredEmployees, setFilteredEmployees] = useState([]);
+    const [searchQuery, setSearchQuery] = useState(""); 
+    const [roleFilter, setRoleFilter] = useState("");
 
 
     //pobieranie danych
@@ -29,6 +33,7 @@ export default function StaffList() {
                 if (response.ok) {
                     const data = await response.json();
                     setEmployees(data);
+                    setFilteredEmployees(data);
                 } else {
                     console.error("Błąd pobierania pracowników");
                 }
@@ -40,8 +45,26 @@ export default function StaffList() {
         fetchEmployees();
     }, []);
 
+    useEffect(() => {
+        const lowerQuery = searchQuery.toLowerCase();
+        setFilteredEmployees(
+            employees.filter((employee) => {
+                const matchesText =
+                    `${employee.first_name} ${employee.last_name}`.toLowerCase().includes(lowerQuery) ||
+                    (employee.role && employee.role.toLowerCase().includes(lowerQuery));
+                const matchesRole = roleFilter ? employee.role === roleFilter : true;
+                return matchesText && matchesRole;
+            })
+        );
+    }, [employees, searchQuery, roleFilter]);
 
+    const handleRoleChange = (e) => {
+        setRoleFilter(e.target.value);
+    };
 
+    const handleSearch = (query) => setSearchQuery(query);
+
+    const roles = Array.from(new Set(employees.map(employee => employee.role).filter(Boolean)));
     //const { employees } = useEmployeeContext();
 
     //tabela
@@ -49,9 +72,19 @@ export default function StaffList() {
         <div className="Staff-panel">
             <div className="Staff-panel-container">
                 <div className="Staff-list">
-                    <ListTopBar headingText="Lista pracowników">
-                        {/* TODO: Filtry */}
-                    </ListTopBar>
+                    <SearchTopBar headingText="Lista pracowników" onSearch={handleSearch}>
+                        <div className="filters-row">
+                            <label>
+                                Rola:
+                                <select value={roleFilter} onChange={handleRoleChange}>
+                                <option value="">Wszystkie</option>
+                                {roles.map(pos => (
+                                    <option key={pos} value={pos}>{pos}</option>
+                                ))}
+                                </select>
+                            </label>
+                        </div>
+                    </SearchTopBar>
 
                     <div className="Staff-list-items">
                         <div className="Staff-list-header">
@@ -62,7 +95,7 @@ export default function StaffList() {
                             <p><strong>Wykonane</strong></p>
                             <p><strong>Razem</strong></p>
                         </div>
-                        {employees?.map((employee) => (
+                        {filteredEmployees?.map((employee) => (
                             <StaffListItem key={employee.id} employee={employee} />
                         ))}
                     </div>

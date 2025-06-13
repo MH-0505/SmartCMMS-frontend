@@ -10,6 +10,13 @@ export default function TaskPanel(){
     const [activeForm, setActiveForm] = useState(null);
     const [tasks, setTasks] = useState([]);
 
+    const [priorityFilter, setPriorityFilter] = useState("");
+    const [categoryFilter, setCategoryFilter] = useState("");
+    const [technicianFilter, setTechnicianFilter] = useState("");
+    const [startDateFilter, setStartDateFilter] = useState("");
+    const [endDateFilter, setEndDateFilter] = useState("");
+    const [filteredTasks, setFilteredTasks] = useState([]);
+
     function handleFormOpen(formType) {
         setActiveForm(formType);
     }
@@ -50,6 +57,24 @@ export default function TaskPanel(){
         fetchTasks();
     }, []);
 
+    useEffect(() => {
+        let filtered = tasks;
+
+        if (priorityFilter) {
+            filtered = filtered.filter(task => task.priority === priorityFilter);
+        }
+        if (categoryFilter) {
+            filtered = filtered.filter(task => task.category.toLowerCase() === categoryFilter);
+        }
+        if (startDateFilter) {
+            filtered = filtered.filter(task => task.deadline_date >= startDateFilter);
+        }
+        if (endDateFilter) {
+            filtered = filtered.filter(task => task.deadline_date <= endDateFilter);
+        }
+        setFilteredTasks(filtered);
+    }, [tasks, priorityFilter, categoryFilter, technicianFilter, startDateFilter, endDateFilter]);
+
     return (
         <div className="Task-panel">
             <button className={"New-task-button"} onClick={() => handleFormOpen("FailureReport")}>
@@ -59,7 +84,12 @@ export default function TaskPanel(){
             <div className="Task-panel-container">
                 <div className="Task-list">
                     <ListTopBar headingText="Lista zadań">
-                        <Filters/>
+                        <Filters
+                            priorityFilter={priorityFilter} setPriorityFilter={setPriorityFilter}
+                            categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter}
+                            startDateFilter={startDateFilter} setStartDateFilter={setStartDateFilter}
+                            endDateFilter={endDateFilter} setEndDateFilter={setEndDateFilter}
+                        />
                     </ListTopBar>
 
                     <div className="Task-list-items">
@@ -69,7 +99,7 @@ export default function TaskPanel(){
                             <p><strong>Priorytet</strong></p>
                             <p><strong>Termin oddania</strong></p>
                         </div>
-                        {tasks?.map(task => {
+                        {filteredTasks?.map(task => {
                             //console.log(task)
                             return (
                                 <div key={task.id} className="Task-item">
@@ -101,27 +131,33 @@ export default function TaskPanel(){
     );
 }
 
-export function Filters() {
+export function Filters({
+    priorityFilter, setPriorityFilter,
+    categoryFilter, setCategoryFilter,
+    technicianFilter, setTechnicianFilter,
+    startDateFilter, setStartDateFilter,
+    endDateFilter, setEndDateFilter
+}) {
     return(
         <div className="Filters">
             <div>
-                <label htmlFor={"priority"}>Priorytet:</label><br/>
-                <select name={"priority"} id={"priority"} style={{minWidth: "fit-content", width: "120px"}}>
-                    <option>Każdy</option>
-                    <option>Wysoki</option>
-                    <option>Średni</option>
-                    <option>Niski</option>
+                <label htmlFor="priority">Priorytet:</label><br/>
+                <select id="priority" value={priorityFilter} onChange={e => setPriorityFilter(e.target.value)} style={{minWidth: "fit-content", width: "120px"}}>
+                    <option value="">Każdy</option>
+                    <option value="wysoki">Wysoki</option>
+                    <option value="średni">Średni</option>
+                    <option value="niski">Niski</option>
                 </select>
             </div>
             <div>
-                <label htmlFor={"category"}>Kategoria:</label><br/>
-                <select name={"category"} id={"category"}>
-                    <option>Wszytkie</option>
-                    <option>Budowlana</option>
-                    <option>Elektryczna</option>
-                    <option>Gazowa</option>
-                    <option>Woda i kanalizacja</option>
-                    <option>Inne</option>
+                <label htmlFor="category">Kategoria:</label><br/>
+                <select id="category" value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)}>
+                    <option value="">Wszytkie</option>
+                    <option value="usterka budowlana">Budowlana</option>
+                    <option value="instalacja elektryczna">Elektryczna</option>
+                    <option value="instalacja gazowa">Gazowa</option>
+                    <option value="instalacja wodno-kanalizacyjna">Woda i kanalizacja</option>
+                    <option value="inne">Inne</option>
                 </select>
             </div>
             <div>
@@ -137,12 +173,12 @@ export function Filters() {
                 <label>Przedział czasowy:</label><br/>
                 <label>
                     Od:
-                    <input type={"date"} name={"startDate"} id={"startDate"}
+                    <input type="date" value={startDateFilter} onChange={e => setStartDateFilter(e.target.value)}
                            style={{minWidth: "fit-content", width: "120px", height: "60%", marginLeft: "10px"}}/>
                 </label>
                 <label style={{marginLeft: "10px"}}>
                     Do:
-                    <input type={"date"} name={"endDate"} id={"endDate"}
+                    <input type="date" value={endDateFilter} onChange={e => setEndDateFilter(e.target.value)}
                            style={{minWidth: "fit-content", width: "120px", height: "60%", marginLeft: "10px"}}/>
                 </label>
             </div>
