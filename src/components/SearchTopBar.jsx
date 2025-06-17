@@ -2,7 +2,7 @@ import "../App.css";
 import "./SearchTopBar.css";
 import { useState } from "react";
 
-export default function SearchTopBar({ onSearch, children }) {
+export default function SearchTopBar({ onSearch, children, buttonText, onButtonClick}) {
     const [filtersVisible, setFiltersVisible] = useState(false);
     const [query, setQuery] = useState("");
 
@@ -28,6 +28,13 @@ export default function SearchTopBar({ onSearch, children }) {
                     onClick={() => setFiltersVisible(!filtersVisible)}
                 >
                     Filtry {filtersVisible ? "▲" : "▼"}
+                </button>
+                <button
+                    className={"Standard-btn"}
+                    style={{borderRadius: "4px", minWidth: "15%", marginRight: "0px"}}
+                    onClick={onButtonClick}
+                >
+                    {buttonText || "Nowy element"}
                 </button>
             </div>
 
