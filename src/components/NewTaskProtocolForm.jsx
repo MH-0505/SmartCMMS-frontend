@@ -2,20 +2,53 @@ import FormTopBar from "../components/FormTopBar";
 import "../pages/Dashboard.css";
 import "../App.css";
 
-export default function NewTaskProtocolForm({ onClose }) {
-    function submitTaskProtocol() {
-        // TODO
+export default function NewTaskProtocolForm({ onClose, taskId}) {
+    function submitTaskProtocol(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const request_url = 'http://localhost:8000/api/task-reports/create/';
+
+        const reportData = {
+            work_description: formData.get("workDescription"),
+            arrival_date_time: `${formData.get("arrivalDate")}T${formData.get("arrivalTime")}`,
+            completion_date_time: `${formData.get("completionDate")}T${formData.get("completionTime")}`,
+            materials_and_parts_used: formData.get("materialsAndPartsUsed"),
+            additional_notes: formData.get("additionalNotes"),
+            task: taskId
+        };
+
+        fetch(request_url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("token")
+            },
+            body: JSON.stringify(reportData)
+        })
+        .then(res => {
+            if (res.ok) {
+                alert("Protokół został zapisany.");
+                onClose();
+            } else {
+                return res.json().then(data => {
+                    console.error("Błąd zapisu:", data);
+                    alert("Nie udało się zapisać protokołu.");
+                });
+            }
+        })
+        .catch(error => {
+            console.error("Błąd sieci:", error);
+            alert("Błąd połączenia z serwerem.");
+        });
     }
 
     return (
         <>
             <FormTopBar heading="Protokół zadania" onCancelButtonClick={onClose} />
 
-            <form action={submitTaskProtocol}>
+            <form onSubmit={submitTaskProtocol}>
                 <div className="Form-gridbox">
-                    <label htmlFor={"receivingPerson"}>Osoba przyjmująca:</label>
-                    <input name={"receivingPerson"} id={"receivingPerson"} style={{width: "100%"}}/>
-
                     <label htmlFor={"workDescription"}>Opis działań:</label>
                     <textarea name={"workDescription"} id={"workDescription"} rows={5} style={{resize: "vertical"}}/>
 

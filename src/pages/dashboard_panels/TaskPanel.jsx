@@ -9,6 +9,7 @@ import ListTopBar from "../../components/ListTopBar";
 export default function TaskPanel(){
     const [activeForm, setActiveForm] = useState(null);
     const [tasks, setTasks] = useState([]);
+    const [selectedTaskId, setSelectedTaskId] = useState(null);
 
     const [priorityFilter, setPriorityFilter] = useState("");
     const [categoryFilter, setCategoryFilter] = useState("");
@@ -17,8 +18,9 @@ export default function TaskPanel(){
     const [endDateFilter, setEndDateFilter] = useState("");
     const [filteredTasks, setFilteredTasks] = useState([]);
 
-    function handleFormOpen(formType) {
+    function handleFormOpen(formType, task_id=null) {
         setActiveForm(formType);
+        setSelectedTaskId(task_id);
     }
 
     function handleFormClose(){
@@ -98,6 +100,7 @@ export default function TaskPanel(){
                             <p><strong>Kategoria</strong></p>
                             <p><strong>Priorytet</strong></p>
                             <p><strong>Termin oddania</strong></p>
+                            <p><strong>Status zadania</strong></p>
                         </div>
                         {filteredTasks?.map(task => {
                             //console.log(task)
@@ -121,7 +124,7 @@ export default function TaskPanel(){
                         {activeForm === "FailureReport" ? (
                             <NewTaskForm onClose={handleFormClose}/>
                         ) : activeForm === "TaskProtocol" ? (
-                            <NewTaskProtocolForm onClose={handleFormClose}/>
+                            <NewTaskProtocolForm onClose={handleFormClose} taskId={selectedTaskId}/>
                         ) : null}
                     </div>
                 </div>
@@ -149,7 +152,7 @@ export function Filters({
                     <option value="niski">Niski</option>
                 </select>
             </div>
-            <div>
+            <div style={{gridColumn: "span 2"}}>
                 <label htmlFor="category">Kategoria:</label><br/>
                 <select id="category" value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)}>
                     <option value="">Wszytkie</option>
@@ -208,6 +211,11 @@ export function ListItem({task_data, protocolOnClick}){
                     <p>{task_data.priority}</p>
                 }
                 <p>{task_data.deadline_date}, {task_data.deadline_time}</p>
+                {task_data.has_report ? (
+                    <p style={{color:'darkgreen'}}><strong>Wykonano</strong></p>
+                ) : (
+                    <p>W trakcie</p>
+                )}
             </div>
             {isExtended ?
                 <>
@@ -237,9 +245,11 @@ export function ListItem({task_data, protocolOnClick}){
                     </div>
                     <div className={"Task-details-footer"}>
                         <button className={"Standard-btn"}>Edytuj zgłoszenie</button>
-                        <button className={"Standard-btn"} onClick={() => protocolOnClick("TaskProtocol")}>
-                            Dodaj protokół
-                        </button>
+                        {!task_data.has_report &&
+                            <button className={"Standard-btn"} onClick={() => protocolOnClick("TaskProtocol", task_data.id)}>
+                                Dodaj protokół
+                            </button>
+                        }
                     </div>
                 </>
                 :
