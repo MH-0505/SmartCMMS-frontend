@@ -17,6 +17,7 @@ export default function TaskPanel(){
     const [endDateFilter, setEndDateFilter] = useState("");
     const [filteredTasks, setFilteredTasks] = useState([]);
     const [employees, setEmployees] = useState([]);
+    const [categories, setCategories] = useState([]);
 
     function handleFormOpen(formType) {
         setActiveForm(formType);
@@ -80,6 +81,29 @@ export default function TaskPanel(){
         fetchEmployees();
     }, []);
 
+    useEffect(() => {
+        const fetchChoices = async () => {
+            try{
+                const response = await fetch("http://localhost:8000/api/tasks/choices/", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("token"),
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setCategories(data.categories);
+                } else {
+                    console.error("Błąd pobierania kategorii zadań");
+                }
+            } catch (error) {
+                console.error("Błąd sieci:", error);
+            }
+        }
+        fetchChoices();
+    }, []);
+
     const technicians = Array.from(new Set(employees.filter(employee => employee.role === "TECHNIK").map(employee => employee.first_name + " " + employee.last_name)));
 
     useEffect(() => {
@@ -118,7 +142,7 @@ export default function TaskPanel(){
                             technicianFilter={technicianFilter} setTechnicianFilter={setTechnicianFilter}
                             startDateFilter={startDateFilter} setStartDateFilter={setStartDateFilter}
                             endDateFilter={endDateFilter} setEndDateFilter={setEndDateFilter}
-                            technicians={technicians}
+                            technicians={technicians} categories={categories}
                         />
                     </ListTopBar>
 
@@ -167,7 +191,7 @@ export function Filters({
     technicianFilter, setTechnicianFilter,
     startDateFilter, setStartDateFilter,
     endDateFilter, setEndDateFilter,
-    technicians
+    technicians, categories
 }) {
     return(
         <div className="Filters">
@@ -182,13 +206,11 @@ export function Filters({
             </div>
             <div>
                 <label htmlFor="category">Kategoria:</label><br/>
-                <select id="category" value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)}>
-                    <option value="">Wszytkie</option>
-                    <option value="usterka budowlana">Budowlana</option>
-                    <option value="instalacja elektryczna">Elektryczna</option>
-                    <option value="instalacja gazowa">Gazowa</option>
-                    <option value="instalacja wodno-kanalizacyjna">Woda i kanalizacja</option>
-                    <option value="inne">Inne</option>
+                <select name={"category"} id={"category"} value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)}>
+                    <option value="">wszystkie</option>
+                    {categories.map(category => (
+                        <option key={category.label} value={category.value}>{category.value}</option>
+                    ))}
                 </select>
             </div>
             <div>
