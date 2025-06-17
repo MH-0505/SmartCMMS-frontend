@@ -23,6 +23,12 @@ export default function NewTaskForm({ onClose }) {
     });
     const [categories, setCategories] = useState([]);
     const [taskTypes, setTaskTypes] = useState([]);
+    const [priority, setPriority] = useState("Wysoki");
+    const [startDate, setStartDate] = useState(() => {
+        const today = new Date();
+        return today.toISOString().split('T')[0];
+    });
+    const [endDate, setEndDate] = useState("");
 
     useEffect(() => {
         // TRYB MOCK
@@ -174,8 +180,39 @@ export default function NewTaskForm({ onClose }) {
                 console.error("Błąd sieci:", error);
                 alert("Błąd połączenia z serwerem.");
             });
+    useEffect(() => {
+        if (priority === "Wysoki" && startDate) {
+            setEndDate(
+                new Date(
+                    Date.parse(startDate) + 24 * 60 * 60 * 1000
+                ).toISOString().split("T")[0]
+            );
+        }
+    }, [priority, startDate]);
+
+    function submitTask() {
+        // TODO
     }
 
+
+    function updateEndDate(priority, baseDate) {
+        setEndDate(
+            new Date(
+            Date.parse(baseDate) +
+                24 * 60 * 60 * 1000 *
+                (priority === "Wysoki" ? 1 : priority === "Średni" ? 5 : 10)
+            ).toISOString().split("T")[0]
+        );
+    }
+
+    const [startTime, setStartTime] = useState(() => {
+    const now = new Date();
+        return now.toTimeString().slice(0,5);
+    });
+    const [endTime, setEndTime] = useState(() => {
+        const now = new Date();
+        return now.toTimeString().slice(0,5);
+    });
 
     return (
         <>
@@ -347,7 +384,13 @@ export default function NewTaskForm({ onClose }) {
                         </select>
 
                         <label htmlFor={"priority"}>Priorytet:</label>
-                        <select name={"priority"} id={"priority"} style={{minWidth: "fit-content", width: "120px"}}>
+                        <select name={"priority"} id={"priority"} value={priority}
+                                onChange={e => {
+                            const selected = e.target.value;
+                            setPriority(selected);
+                            updateEndDate(selected, startDate);
+                        }}
+                                style={{minWidth: "fit-content", width: "120px"}}>
                             <option key="WYSOKI" value="wysoki">Wysoki</option>
                             <option key="SREDNI" value="średni">Średni</option>
                             <option key="NISKI" value="niski">Niski</option>
@@ -356,20 +399,26 @@ export default function NewTaskForm({ onClose }) {
                         <label htmlFor={"startDate"}>Data przyjęcia zgłoszenia:</label>
                         <div>
                             <input type={"date"} name={"startDate"} id={"startDate"}
-                                   style={{minWidth: "fit-content", width: "120px", height: "100%"}}/>
+                                    value={startDate}
+                                    onChange={e => {
+                                            const newDate = e.target.value;
+                                            setStartDate(newDate);
+                                            updateEndDate(priority, newDate);
+                                    }}
+                                    style={{minWidth: "fit-content", width: "120px", height: "100%"}}/>
                             <label style={{marginLeft: "10px"}}>
                                 Godzina:
-                                <input type={"time"} name={"startTime"} style={{marginLeft: "10px"}}/>
+                                <input type={"time"} name={"startTime"} value = {startTime} onChange={e => setStartTime(e.target.value)} style={{marginLeft: "10px"}}/>
                             </label>
                         </div>
 
                         <label htmlFor={"endDate"}>Planowany termin zakończenia:</label>
                         <div>
-                            <input type={"date"} name={"endDate"} id={"endDate"}
+                            <input type="date" name="endDate" id="endDate" value={endDate}
                                    style={{minWidth: "fit-content", width: "120px", height: "100%"}}/>
                             <label style={{marginLeft: "10px"}}>
                                 Godzina:
-                                <input type={"time"} name={"endTime"} style={{marginLeft: "10px"}}/>
+                                <input type={"time"} name={"endTime"} value = {endTime} onChange={e => setEndTime(e.target.value)} style={{marginLeft: "10px"}}/>
                             </label>
                         </div>
                     </div>

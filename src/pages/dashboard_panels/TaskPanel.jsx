@@ -6,6 +6,14 @@ import NewTaskForm from "../../components/NewTaskForm";
 import NewTaskProtocolForm from "../../components/NewTaskProtocolForm";
 import ListTopBar from "../../components/ListTopBar";
 
+function Spinner() {
+    return (
+        <div className="spinner-container">
+            <div className="spinner"></div>
+        </div>
+    );
+}
+
 export default function TaskPanel(){
     const [activeForm, setActiveForm] = useState(null);
     const [tasks, setTasks] = useState([]);
@@ -17,6 +25,43 @@ export default function TaskPanel(){
     const [startDateFilter, setStartDateFilter] = useState("");
     const [endDateFilter, setEndDateFilter] = useState("");
     const [filteredTasks, setFilteredTasks] = useState([]);
+    const [employees, setEmployees] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (process.env.REACT_APP_MOCK_MODE === "true") {
+            mockTasks(setTasks);
+            setLoading(false);
+            return;
+        }
+
+        const fetchTasks = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch("http://localhost:8000/api/tasks/", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("token")
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setTasks(data);
+                } else {
+                    console.error("Błąd pobierania zadań");
+                }
+            } catch (error) {
+                console.error("Błąd sieci:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTasks();
+    }, []);
+
 
     function handleFormOpen(formType, task_id=null) {
         setActiveForm(formType);
@@ -60,6 +105,53 @@ export default function TaskPanel(){
     }, []);
 
     useEffect(() => {
+        const fetchEmployees = async () => {
+            try {
+            const response = await fetch("http://localhost:8000/api/employees/", {
+                headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("token")
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setEmployees(data);
+            } else {
+                console.error("Błąd pobierania pracowników");
+            }
+            } catch (error) {
+            console.error("Błąd sieci:", error);
+            }
+        };
+        fetchEmployees();
+    }, []);
+
+    useEffect(() => {
+        const fetchChoices = async () => {
+            try{
+                const response = await fetch("http://localhost:8000/api/tasks/choices/", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("token"),
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setCategories(data.categories);
+                } else {
+                    console.error("Błąd pobierania kategorii zadań");
+                }
+            } catch (error) {
+                console.error("Błąd sieci:", error);
+            }
+        }
+        fetchChoices();
+    }, []);
+
+    const technicians = Array.from(new Set(employees.filter(employee => employee.role === "TECHNIK").map(employee => employee.first_name + " " + employee.last_name)));
+
+    useEffect(() => {
         let filtered = tasks;
 
         if (priorityFilter) {
@@ -74,8 +166,11 @@ export default function TaskPanel(){
         if (endDateFilter) {
             filtered = filtered.filter(task => task.deadline_date <= endDateFilter);
         }
+        if (technicianFilter) {
+            filtered = filtered.filter(task => (task.technician?.first_name + " " + task.technician?.last_name) === technicianFilter);
+        }
         setFilteredTasks(filtered);
-    }, [tasks, priorityFilter, categoryFilter, technicianFilter, startDateFilter, endDateFilter]);
+    }, [tasks, priorityFilter, categoryFilter, technicianFilter, startDateFilter, endDateFilter, technicianFilter]);
 
     return (
         <div className="Task-panel">
@@ -89,8 +184,10 @@ export default function TaskPanel(){
                         <Filters
                             priorityFilter={priorityFilter} setPriorityFilter={setPriorityFilter}
                             categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter}
+                            technicianFilter={technicianFilter} setTechnicianFilter={setTechnicianFilter}
                             startDateFilter={startDateFilter} setStartDateFilter={setStartDateFilter}
                             endDateFilter={endDateFilter} setEndDateFilter={setEndDateFilter}
+                            technicians={technicians} categories={categories}
                         />
                     </ListTopBar>
 
@@ -102,9 +199,10 @@ export default function TaskPanel(){
                             <p><strong>Termin oddania</strong></p>
                             <p><strong>Status zadania</strong></p>
                         </div>
-                        {filteredTasks?.map(task => {
-                            //console.log(task)
-                            return (
+                        {loading ? (
+                            <Spinner />
+                        ) : (
+                            filteredTasks?.map(task => (
                                 <div key={task.id} className="Task-item">
                                     <ListItem
                                         key={task.id}
@@ -112,8 +210,8 @@ export default function TaskPanel(){
                                         protocolOnClick={handleFormOpen}
                                     />
                                 </div>
-                            );
-                        })}
+                            ))
+                        )}
                     </div>
                 </div>
             </div>
@@ -139,7 +237,8 @@ export function Filters({
     categoryFilter, setCategoryFilter,
     technicianFilter, setTechnicianFilter,
     startDateFilter, setStartDateFilter,
-    endDateFilter, setEndDateFilter
+    endDateFilter, setEndDateFilter,
+    technicians, categories
 }) {
     return(
         <div className="Filters">
@@ -154,25 +253,23 @@ export function Filters({
             </div>
             <div style={{gridColumn: "span 2"}}>
                 <label htmlFor="category">Kategoria:</label><br/>
-                <select id="category" value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)}>
-                    <option value="">Wszytkie</option>
-                    <option value="usterka budowlana">Budowlana</option>
-                    <option value="instalacja elektryczna">Elektryczna</option>
-                    <option value="instalacja gazowa">Gazowa</option>
-                    <option value="instalacja wodno-kanalizacyjna">Woda i kanalizacja</option>
-                    <option value="inne">Inne</option>
+                <select name={"category"} id={"category"} value={categoryFilter} onChange={e => setCategoryFilter(e.target.value)}>
+                    <option value="">wszystkie</option>
+                    {categories.map(category => (
+                        <option key={category.label} value={category.value}>{category.value}</option>
+                    ))}
                 </select>
             </div>
             <div>
                 <label htmlFor={"technician"}>Wykonawcy:</label><br/>
-                <select name={"technician"} id={"technician"}>
-                    <option>Wszyscy</option>
-                    <option>Jan Kowalski</option>
-                    <option>Adam Nowak</option>
-                    <option>Andrzej Górecki</option>
+                <select name="technician" id="technician" value={technicianFilter} onChange={e => setTechnicianFilter(e.target.value)}>
+                    <option value="">Wszyscy</option>
+                    {technicians.map(tech => (
+                        <option key={tech} value={tech}>{tech}</option>
+                    ))}
                 </select>
             </div>
-            <div style={{gridColumn: "span 2"}}>
+            <div style={{gridColumn: "span 4"}}>
                 <label>Przedział czasowy:</label><br/>
                 <label>
                     Od:

@@ -18,6 +18,15 @@ export default function CollapsibleSection({ title, children }) {
         }
     }, [isOpen]);
 
+    useEffect(() => {
+        if (!isOpen || !contentRef.current) return;
+        const observer = new window.ResizeObserver(() => {
+            setHeight(`${contentRef.current.scrollHeight}px`);
+        });
+        observer.observe(contentRef.current);
+        return () => observer.disconnect();
+    }, [isOpen]);
+
     return (
         <div className="collapsible-section">
             <div className="collapsible-header" onClick={toggleSection}>
@@ -25,11 +34,10 @@ export default function CollapsibleSection({ title, children }) {
                 <span>{isOpen ? "▲" : "▼"}</span>
             </div>
             <div
-                ref={contentRef}
                 className="collapsible-content-wrapper" //wrapper do animacji
                 style={{ maxHeight: height }}
             >
-                <div className="collapsible-content">{children}</div>
+                <div className="collapsible-content" ref={contentRef}>{children}</div>
             </div>
         </div>
     );
