@@ -63,3 +63,25 @@
   border-radius: 6px;
   font-size: 14px;
 }
+
+.user-tasks {
+  font-size: 20px;
+  font-weight: 700;
+  margin-top: 50px;
+  margin-bottom: 5%;
+}
+
+.user-tasks-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px 16px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+  text-align: left;
+}
+
+.user-tasks-grid > div {
+  color: #777;
+  font-size: 14px;
+}

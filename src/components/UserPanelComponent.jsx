@@ -14,6 +14,17 @@ export default function UserPanel() {
                 <img src={profilePicture} alt="Avatar" className="user-avatar" />
                 <div className="user-name">{user.first_name}</div>
                 <div className="user-email">{user.email}</div>
+                <div className="user-tasks">Zadania</div>
+                <div className="user-tasks-grid">
+                    <div>Zadania nowe:</div>
+                    <div>{user.tasks_new}</div>
+                    <div>Zadania w trakcie:</div>
+                    <div>{user.tasks_in_progress}</div>
+                    <div>Zadania zrobione:</div>
+                    <div>{user.tasks_done}</div>
+                    <div>Razem:</div>
+                    <div>{user.tasks_done + user.tasks_in_progress + user.tasks_new}</div>
+                </div>
             </div>
 
             <div className="user-info-form">
