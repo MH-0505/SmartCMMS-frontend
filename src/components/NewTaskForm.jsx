@@ -180,6 +180,8 @@ export default function NewTaskForm({ onClose }) {
                 console.error("Błąd sieci:", error);
                 alert("Błąd połączenia z serwerem.");
             });
+    }
+
     useEffect(() => {
         if (priority === "Wysoki" && startDate) {
             setEndDate(
