@@ -16,6 +16,7 @@ export default function TaskPanel(){
     const [startDateFilter, setStartDateFilter] = useState("");
     const [endDateFilter, setEndDateFilter] = useState("");
     const [filteredTasks, setFilteredTasks] = useState([]);
+    const [employees, setEmployees] = useState([]);
 
     function handleFormOpen(formType) {
         setActiveForm(formType);
@@ -58,6 +59,30 @@ export default function TaskPanel(){
     }, []);
 
     useEffect(() => {
+        const fetchEmployees = async () => {
+            try {
+            const response = await fetch("http://localhost:8000/api/employees/", {
+                headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("token")
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setEmployees(data);
+            } else {
+                console.error("Błąd pobierania pracowników");
+            }
+            } catch (error) {
+            console.error("Błąd sieci:", error);
+            }
+        };
+        fetchEmployees();
+    }, []);
+
+    const technicians = Array.from(new Set(employees.filter(employee => employee.role === "TECHNIK").map(employee => employee.first_name + " " + employee.last_name)));
+
+    useEffect(() => {
         let filtered = tasks;
 
         if (priorityFilter) {
@@ -72,8 +97,11 @@ export default function TaskPanel(){
         if (endDateFilter) {
             filtered = filtered.filter(task => task.deadline_date <= endDateFilter);
         }
+        if (technicianFilter) {
+            filtered = filtered.filter(task => (task.technician?.first_name + " " + task.technician?.last_name) === technicianFilter);
+        }
         setFilteredTasks(filtered);
-    }, [tasks, priorityFilter, categoryFilter, technicianFilter, startDateFilter, endDateFilter]);
+    }, [tasks, priorityFilter, categoryFilter, technicianFilter, startDateFilter, endDateFilter, technicianFilter]);
 
     return (
         <div className="Task-panel">
@@ -87,8 +115,10 @@ export default function TaskPanel(){
                         <Filters
                             priorityFilter={priorityFilter} setPriorityFilter={setPriorityFilter}
                             categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter}
+                            technicianFilter={technicianFilter} setTechnicianFilter={setTechnicianFilter}
                             startDateFilter={startDateFilter} setStartDateFilter={setStartDateFilter}
                             endDateFilter={endDateFilter} setEndDateFilter={setEndDateFilter}
+                            technicians={technicians}
                         />
                     </ListTopBar>
 
@@ -136,7 +166,8 @@ export function Filters({
     categoryFilter, setCategoryFilter,
     technicianFilter, setTechnicianFilter,
     startDateFilter, setStartDateFilter,
-    endDateFilter, setEndDateFilter
+    endDateFilter, setEndDateFilter,
+    technicians
 }) {
     return(
         <div className="Filters">
@@ -162,14 +193,14 @@ export function Filters({
             </div>
             <div>
                 <label htmlFor={"technician"}>Wykonawcy:</label><br/>
-                <select name={"technician"} id={"technician"}>
-                    <option>Wszyscy</option>
-                    <option>Jan Kowalski</option>
-                    <option>Adam Nowak</option>
-                    <option>Andrzej Górecki</option>
+                <select name="technician" id="technician" value={technicianFilter} onChange={e => setTechnicianFilter(e.target.value)}>
+                    <option value="">Wszyscy</option>
+                    {technicians.map(tech => (
+                        <option key={tech} value={tech}>{tech}</option>
+                    ))}
                 </select>
             </div>
-            <div style={{gridColumn: "span 2"}}>
+            <div style={{gridColumn: "span 4"}}>
                 <label>Przedział czasowy:</label><br/>
                 <label>
                     Od:
@@ -349,3 +380,5 @@ function mockTasks(setTasks){
 
     setTasks(enrichedTasks);
 }
+
+
