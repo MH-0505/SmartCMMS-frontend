@@ -1,5 +1,5 @@
 import React from "react";
-import UserPanelComponent from "../../components/UserPanelComponent"; // ← import z folderu components
+import UserPanelComponent from "../../components/UserPanelComponent";
 
 export default function UserPanelPage() {
     return (

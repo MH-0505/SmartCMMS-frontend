@@ -83,7 +83,11 @@ export default function TaskPanel(){
 
             <div className="Task-panel-container">
                 <div className="Task-list">
-                    <ListTopBar headingText="Lista zadań">
+                    <ListTopBar
+                        headingText="Lista zadań"
+                        buttonText={"Nowe zadanie"}
+                        onButtonClick={() => handleFormOpen("FailureReport")}
+                    >
                         <Filters
                             priorityFilter={priorityFilter} setPriorityFilter={setPriorityFilter}
                             categoryFilter={categoryFilter} setCategoryFilter={setCategoryFilter}

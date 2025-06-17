@@ -9,6 +9,7 @@
   border: none;
   color: white;
   padding: 6px;
+  min-width: 12%;
   margin-left: 8px;
   margin-right: 8px;
   font-size: calc(6px + 1vmin);
@@ -16,6 +17,10 @@
 
 .Standard-btn:hover{
   background-color: var(--darkgrey);
+}
+
+.Red-btn{
+  background-color: var(--fadedred);
 }
 
 .Header-bar{
@@ -146,6 +151,11 @@
 .List-top-bar{
   border-bottom: solid 1px gray;
   padding: 5px;
+}
+
+.List-item-bottom-bar{
+  display: flex;
+  flex-direction: row;
 }
 
 .arrow {

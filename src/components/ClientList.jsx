@@ -3,6 +3,8 @@ import "../pages/Dashboard.css";
 import "../App.css";
 import "./ClientList.css";
 import SearchTopBar from "./SearchTopBar";
+import ListTopBar from "./ListTopBar";
+import NewClientForm from "./NewClientForm";
 
 // Lista klientów
 export default function ClientList() {
@@ -10,7 +12,14 @@ export default function ClientList() {
     const [filteredClients, setFilteredClients] = useState([]);
     const [departmentFilter, setDepartmentFilter] = useState("");
     const [jobPositionFilter, setJobPositionFilter] = useState("");
-    const [searchQuery, setSearchQuery] = useState(""); 
+    const [searchQuery, setSearchQuery] = useState("");
+    const [activeForm, setActiveForm] = useState(null);
+    const [selectedClient, setSelectedClient] = useState(null);
+
+    function handleNewClient(){
+        setSelectedClient(null)
+        setActiveForm(true)
+    }
 
     //pobieranie danych
     useEffect(() => {
@@ -68,11 +77,58 @@ export default function ClientList() {
     const departments = Array.from(new Set(clients.map(client => client.department).filter(Boolean)));
     const jobPositions = Array.from(new Set(clients.map(client => client.job_position).filter(Boolean)));
 
+    // pojedynczy klient
+    function ClientListItem({ client }) {
+        const [isExpanded, setIsExpanded] = useState(false);
+
+        const handleClick = () => {
+            setIsExpanded(!isExpanded);
+        };
+
+        function handleEditButton() {
+            setSelectedClient(client)
+            setActiveForm(true)
+        }
+
+        function handleDeleteButton() {
+
+        }
+
+        return (
+            <div className={`Client-wrapper ${isExpanded ? "active" : ""}`}>
+                <div className="Client" onClick={handleClick}>
+                    <p>{client.first_name} {client.last_name}</p>
+                    <p>{client.job_position}</p>
+                    <p>{client.department}</p>
+                </div>
+
+                {isExpanded && (
+                    <div className="Client-details">
+                        <p><strong>ID klienta:</strong></p> <p> {client.id}</p>
+                        <p><strong>Email:</strong></p>      <p> {client.email_address}</p>
+                        <p><strong>Telefon:</strong></p>    <p> +{client.phone_number}</p>
+                        <p><strong>Stanowisko:</strong></p> <p> {client.job_position}</p>
+                        <p><strong>Dział:</strong></p>      <p> {client.department}</p>
+
+                        <div className="List-item-bottom-bar" style={{gridColumn: "span 2"}}>
+                            <button className="Standard-btn Red-btn" onClick={handleDeleteButton} style={{marginLeft: "auto"}}>
+                                Usuń klienta
+                            </button>
+                            <button className="Standard-btn" onClick={handleEditButton}>
+                                Edytuj dane
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+    }
+
     return (
         <div className="Client-panel">
             <div className="Client-panel-container">
                 <div className="Client-list">
-                    <SearchTopBar headingText="Lista klientów" onSearch={handleSearch}>
+                    <SearchTopBar headingText="Lista klientów" onSearch={handleSearch} buttonText={"Nowy klient"} onButtonClick={handleNewClient}>
                         <div className="filters-row">
                             <label>
                                 Stanowisko:
@@ -107,36 +163,10 @@ export default function ClientList() {
                     </div>
                 </div>
             </div>
-        </div>
-    );
-}
-
-// pojedynczy klient
-function ClientListItem({ client }) {
-    const [isExpanded, setIsExpanded] = useState(false);
-
-    const handleClick = () => {
-        setIsExpanded(!isExpanded);
-    };
-
-    return (
-        <div className={`Client-wrapper ${isExpanded ? "active" : ""}`}>
-            {/*ZWERYFIKOWAĆ DANE*/}
-            {/*+ustalić czy prawidłowy format bez rozwinięcia/z rozwinięciem*/}
-            <div className="Client" onClick={handleClick}>
-                <p>{client.first_name} {client.last_name}</p>
-                <p>{client.job_position}</p>
-                <p>{client.department}</p>
-            </div>
-
-            {isExpanded && (
-                <div className="Client-details">
-                    <div style={{ gridColumn: "span 2" }}>
-                        <p><strong>ID klienta:</strong> {client.id}</p>
-                        <p><strong>Email:</strong> {client.email_address}</p>
-                        <p><strong>Telefon:</strong> +{client.phone_number}</p>
-                        <p><strong>Stanowisko:</strong> {client.job_position}</p>
-                        <p><strong>Dział:</strong> {client.department}</p>
+            {activeForm && (
+                <div className="Overlay">
+                    <div className="Form-container">
+                        <NewClientForm onClose={() => setActiveForm(false)} selectedClient={selectedClient}/>
                     </div>
                 </div>
             )}
