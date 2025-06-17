@@ -130,6 +130,15 @@ export default function NewTaskForm({ onClose }) {
         );
     }
 
+    const [startTime, setStartTime] = useState(() => {
+    const now = new Date();
+        return now.toTimeString().slice(0,5);
+    });
+    const [endTime, setEndTime] = useState(() => {
+        const now = new Date();
+        return now.toTimeString().slice(0,5);
+    });
+
     return (
         <>
             <FormTopBar heading="Nowe zgłoszenie" onCancelButtonClick={onClose} />
@@ -310,7 +319,7 @@ export default function NewTaskForm({ onClose }) {
                                     style={{minWidth: "fit-content", width: "120px", height: "100%"}}/>
                             <label style={{marginLeft: "10px"}}>
                                 Godzina:
-                                <input type={"time"} name={"startTime"} style={{marginLeft: "10px"}}/>
+                                <input type={"time"} name={"startTime"} value = {startTime} onChange={e => setStartTime(e.target.value)} style={{marginLeft: "10px"}}/>
                             </label>
                         </div>
 
@@ -320,7 +329,7 @@ export default function NewTaskForm({ onClose }) {
                                    style={{minWidth: "fit-content", width: "120px", height: "100%"}}/>
                             <label style={{marginLeft: "10px"}}>
                                 Godzina:
-                                <input type={"time"} name={"endTime"} style={{marginLeft: "10px"}}/>
+                                <input type={"time"} name={"endTime"} value = {endTime} onChange={e => setEndTime(e.target.value)} style={{marginLeft: "10px"}}/>
                             </label>
                         </div>
                     </div>
