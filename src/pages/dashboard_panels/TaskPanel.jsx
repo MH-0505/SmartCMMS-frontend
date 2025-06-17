@@ -6,6 +6,14 @@ import NewTaskForm from "../../components/NewTaskForm";
 import NewTaskProtocolForm from "../../components/NewTaskProtocolForm";
 import ListTopBar from "../../components/ListTopBar";
 
+function Spinner() {
+    return (
+        <div className="spinner-container">
+            <div className="spinner"></div>
+        </div>
+    );
+}
+
 export default function TaskPanel(){
     const [activeForm, setActiveForm] = useState(null);
     const [tasks, setTasks] = useState([]);
@@ -18,6 +26,41 @@ export default function TaskPanel(){
     const [filteredTasks, setFilteredTasks] = useState([]);
     const [employees, setEmployees] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (process.env.REACT_APP_MOCK_MODE === "true") {
+            mockTasks(setTasks);
+            setLoading(false);
+            return;
+        }
+
+        const fetchTasks = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch("http://localhost:8000/api/tasks/", {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("token")
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setTasks(data);
+                } else {
+                    console.error("Błąd pobierania zadań");
+                }
+            } catch (error) {
+                console.error("Błąd sieci:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTasks();
+    }, []);
+
 
     function handleFormOpen(formType) {
         setActiveForm(formType);
@@ -153,9 +196,10 @@ export default function TaskPanel(){
                             <p><strong>Priorytet</strong></p>
                             <p><strong>Termin oddania</strong></p>
                         </div>
-                        {filteredTasks?.map(task => {
-                            //console.log(task)
-                            return (
+                        {loading ? (
+                            <Spinner />
+                        ) : (
+                            filteredTasks?.map(task => (
                                 <div key={task.id} className="Task-item">
                                     <ListItem
                                         key={task.id}
@@ -163,8 +207,8 @@ export default function TaskPanel(){
                                         protocolOnClick={handleFormOpen}
                                     />
                                 </div>
-                            );
-                        })}
+                            ))
+                        )}
                     </div>
                 </div>
             </div>
