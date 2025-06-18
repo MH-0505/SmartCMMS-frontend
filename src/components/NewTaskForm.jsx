@@ -192,10 +192,6 @@ export default function NewTaskForm({ onClose }) {
         }
     }, [priority, startDate]);
 
-    function submitTask() {
-        // TODO
-    }
-
 
     function updateEndDate(priority, baseDate) {
         setEndDate(
